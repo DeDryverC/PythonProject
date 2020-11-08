@@ -1,0 +1,42 @@
+import curses
+def main(stdscr):
+    curses.noecho()
+    curses.cbreak()
+    curses.curs_set(0)
+    stdscr.keypad(True)
+    curses.initscr()
+    curses.start_color()
+    while True:
+        for i in range(20):
+            for j in range(10):
+                try:
+                    stdscr.addstr(0, i, "#")    #Murs
+                    stdscr.addstr(j, 19, "#")
+                    stdscr.addstr(9, i, "#")
+                    stdscr.addstr(j, 0, "#")
+
+                except:
+                    pass
+        for k in range(18):
+            for l in range(8):
+                try:
+                    stdscr.addstr(1, k+1, "*", curses.color_pair(6))  #Pac Gommes de base
+                    stdscr.addstr(l+1, 18, "*", curses.color_pair(6))
+                    stdscr.addstr(8, k+1, "*", curses.color_pair(6))
+                    stdscr.addstr(l+1, 1, "*", curses.color_pair(6))
+                    stdscr.addstr(1, 1, "x")  #Pac Gommes spéciale
+                    stdscr.addstr(1, 18, "x")
+                    stdscr.addstr(8, 1, "x")
+                    stdscr.addstr(8, 18, "x")
+                    stdscr.addstr(5, 10, "x")  # Fruit
+                    stdscr.addstr(4, 9, "}")   # Pac Man
+                except:
+                    pass
+
+        stdscr.refresh()
+        key = stdscr.getch()
+        if key == ord('q'):
+            break
+
+
+curses.wrapper(main)
