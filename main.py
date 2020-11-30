@@ -10,14 +10,13 @@ VERSION : INSTABLE
 
 Desc: MVP du projet 2TI en python.
 
-test
 """
 
 # IMPORT SECTION
 import curses
 
-from PythonProject.Module_PacDuel.MappingGen import MapGenerator
-from PythonProject.Module_PacDuel.ScoreCount import ScoreCount
+from PythonProject.Module_PacDuel.MappingGen import MapGenerator   # Si jamais, supprimez cette ligne et re-importez grace a Pycharm ligne 82
+from PythonProject.Module_PacDuel.ScoreCount import ScoreCount     # Pareil ligne 78
 
 
 """
