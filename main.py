@@ -119,108 +119,68 @@ def main(stdscr):
         if key == ord('z'):
             if map[pos_pacman[0] - 1][pos_pacman[1]] == "#":
                 pass
-            elif map[pos_pacman[0] - 1][pos_pacman[1]] == "*":
-                map[pos_pacman[0] - 1][pos_pacman[1]] = "o"
-                map[pos_pacman[0]][pos_pacman[1]] = " "
-                pos_pacman[0] -= 1
-                count_coll -= 1
-                score.add_score(100)
-            elif map[pos_pacman[0] - 1][pos_pacman[1]] == "x":
-                map[pos_pacman[0] - 1][pos_pacman[1]] = "o"
-                map[pos_pacman[0]][pos_pacman[1]] = " "
-                pos_pacman[0] -= 1
-                count_coll -= 1
-                score.add_score(200)
-            elif map[pos_pacman[0] - 1][pos_pacman[1]] == "^":
-                map[pos_pacman[0] - 1][pos_pacman[1]] = "o"
-                map[pos_pacman[0]][pos_pacman[1]] = " "
-                pos_pacman[0] -= 1
-                count_coll -= 1
-                score.add_score(500)
-            elif map[pos_pacman[0] - 1][pos_pacman[1]] == " ":
+            else:
+                if map[pos_pacman[0] - 1][pos_pacman[1]] != " ":
+                    count_coll -= 1
+                if map[pos_pacman[0] - 1][pos_pacman[1]] == "*":
+                    score.add_score(100)
+                if map[pos_pacman[0]][pos_pacman[1] - 1] == "x":
+                    score.add_score(200)
+                if map[pos_pacman[0] - 1][pos_pacman[1]] == "^":
+                    score.add_score(500)
                 map[pos_pacman[0] - 1][pos_pacman[1]] = "o"
                 map[pos_pacman[0]][pos_pacman[1]] = " "
                 pos_pacman[0] -= 1
 
-        elif key == ord('s'):
-            if map[pos_pacman[0] + 1][pos_pacman[1]] == "#":
-                pass
-            elif map[pos_pacman[0] + 1][pos_pacman[1]] == "*":
-                map[pos_pacman[0] + 1][pos_pacman[1]] = "o"
-                map[pos_pacman[0]][pos_pacman[1]] = " "
-                pos_pacman[0] += 1
-                count_coll -= 1
-                score.add_score(100)
-            elif map[pos_pacman[0] + 1][pos_pacman[1]] == "x":
-                map[pos_pacman[0] + 1][pos_pacman[1]] = "o"
-                map[pos_pacman[0]][pos_pacman[1]] = " "
-                pos_pacman[0] += 1
-                count_coll -= 1
-                score.add_score(200)
-            elif map[pos_pacman[0] + 1][pos_pacman[1]] == "^":
-                map[pos_pacman[0] + 1][pos_pacman[1]] = "o"
-                map[pos_pacman[0]][pos_pacman[1]] = " "
-                pos_pacman[0] += 1
-                count_coll -= 1
-                score.add_score(500)
-            elif map[pos_pacman[0] + 1][pos_pacman[1]] == " ":
-                map[pos_pacman[0] + 1][pos_pacman[1]] = "o"
-                map[pos_pacman[0]][pos_pacman[1]] = " "
-                pos_pacman[0] += 1
-
-        elif key == ord('q'):
+        if key == ord('q'):
             if map[pos_pacman[0]][pos_pacman[1] - 1] == "#":
                 pass
-            elif map[pos_pacman[0]][pos_pacman[1] - 1] == "*":
-                map[pos_pacman[0]][pos_pacman[1] - 1] = "o"
-                map[pos_pacman[0]][pos_pacman[1]] = " "
-                pos_pacman[1] -= 1
-                count_coll -= 1
-                score.add_score(100)
-            elif map[pos_pacman[0]][pos_pacman[1] - 1] == "x":
-                map[pos_pacman[0]][pos_pacman[1] - 1] = "o"
-                map[pos_pacman[0]][pos_pacman[1]] = " "
-                pos_pacman[1] -= 1
-                count_coll -= 1
-                score.add_score(200)
-            elif map[pos_pacman[0]][pos_pacman[1] - 1] == "^":
-                map[pos_pacman[0]][pos_pacman[1] - 1] = "o"
-                map[pos_pacman[0]][pos_pacman[1]] = " "
-                pos_pacman[1] -= 1
-                count_coll -= 1
-                score.add_score(500)
-            elif map[pos_pacman[0]][pos_pacman[1] - 1] == " ":
+            else:
+                if map[pos_pacman[0]][pos_pacman[1] - 1] != " ":
+                    count_coll -= 1
+                if map[pos_pacman[0]][pos_pacman[1] - 1] == "*":
+                    score.add_score(100)
+                if map[pos_pacman[0]][pos_pacman[1] - 1] == "x":
+                    score.add_score(200)
+                if map[pos_pacman[0]][pos_pacman[1] - 1] == "^":
+                    score.add_score(500)
                 map[pos_pacman[0]][pos_pacman[1] - 1] = "o"
                 map[pos_pacman[0]][pos_pacman[1]] = " "
                 pos_pacman[1] -= 1
 
-        elif key == ord('d'):
+        if key == ord('s'):
+            if map[pos_pacman[0] + 1][pos_pacman[1]] == "#":
+                pass
+            else:
+                if map[pos_pacman[0] + 1][pos_pacman[1]] != " ":
+                    count_coll -= 1
+                if map[pos_pacman[0] + 1][pos_pacman[1]] == "*":
+                    score.add_score(100)
+                if map[pos_pacman[0] + 1][pos_pacman[1]] == "x":
+                    score.add_score(200)
+                if map[pos_pacman[0] + 1][pos_pacman[1]] == "^":
+                    score.add_score(500)
+                map[pos_pacman[0] + 1][pos_pacman[1]] = "o"
+                map[pos_pacman[0]][pos_pacman[1]] = " "
+                pos_pacman[0] += 1
+
+        if key == ord('d'):
             if map[pos_pacman[0]][pos_pacman[1] + 1] == "#":
                 pass
-            elif map[pos_pacman[0]][pos_pacman[1] + 1] == "*":
-                map[pos_pacman[0]][pos_pacman[1] + 1] = "o"
-                map[pos_pacman[0]][pos_pacman[1]] = " "
-                pos_pacman[1] += 1
-                count_coll -= 1
-                score.add_score(100)
-            elif map[pos_pacman[0]][pos_pacman[1] + 1] == "x":
-                map[pos_pacman[0]][pos_pacman[1] + 1] = "o"
-                map[pos_pacman[0]][pos_pacman[1]] = " "
-                pos_pacman[1] += 1
-                count_coll -= 1
-                score.add_score(200)
-            elif map[pos_pacman[0]][pos_pacman[1] + 1] == "^":
-                map[pos_pacman[0]][pos_pacman[1] + 1] = "o"
-                map[pos_pacman[0]][pos_pacman[1]] = " "
-                pos_pacman[1] += 1
-                count_coll -= 1
-                score.add_score(500)
-            elif map[pos_pacman[0]][pos_pacman[1] + 1] == " ":
+            else:
+                if map[pos_pacman[0]][pos_pacman[1] + 1] != " ":
+                    count_coll -= 1
+                if map[pos_pacman[0]][pos_pacman[1] + 1] == "*":
+                    score.add_score(100)
+                if map[pos_pacman[0]][pos_pacman[1] + 1] == "x":
+                    score.add_score(200)
+                if map[pos_pacman[0]][pos_pacman[1] + 1] == "^":
+                    score.add_score(500)
                 map[pos_pacman[0]][pos_pacman[1] + 1] = "o"
                 map[pos_pacman[0]][pos_pacman[1]] = " "
                 pos_pacman[1] += 1
 
-        elif key == ord('p'):
+        if key == ord('p'):
             break
 
 
