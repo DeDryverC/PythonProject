@@ -9,15 +9,14 @@ Update 10/11/2020 : -le mvp utilise maintenant des fichiers pour générer les c
 VERSION : INSTABLE
 
 Desc: MVP du projet 2TI en python.
-
-test
 """
 
 # IMPORT SECTION
 import curses
+from ScoreCount import ScoreCount
+from MappingGen import MapGenerator
 
-from PythonProject.Module_PacDuel.MappingGen import MapGenerator
-from PythonProject.Module_PacDuel.ScoreCount import ScoreCount
+
 
 
 """
