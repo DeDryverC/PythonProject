@@ -15,9 +15,9 @@ Desc: MVP du projet 2TI en python.
 # IMPORT SECTION
 import curses
 
-from PythonProject.Module_PacDuel.MappingGen import MapGenerator   # Si jamais, supprimez cette ligne et re-importez grace a Pycharm ligne 82
-from PythonProject.Module_PacDuel.ScoreCount import ScoreCount     # Pareil ligne 78
-
+from PythonProject.Module_PacDuel.MappingGen import gen_map, \
+    cast_map  # Si jamais, supprimez cette ligne et re-importez grace a Pycharm ligne 82
+from PythonProject.Module_PacDuel.ScoreCount import ScoreCount  # Pareil ligne 78
 
 """
 Ecrit par Cedric de Dryver le 09 novembre 2020
@@ -26,6 +26,8 @@ Déplacé dans une fonction par Andréas le 10 novembre 2020
 Description: initialisation de la fenetre avec curses ainsi que l'initialisation 
 des paires de couleur
 """
+
+
 def init_win(stdscr):
     curses.noecho()
     curses.cbreak()
@@ -37,12 +39,14 @@ def init_win(stdscr):
     curses.init_pair(2, curses.COLOR_GREEN, curses.COLOR_BLACK)
     curses.init_pair(3, curses.COLOR_YELLOW, curses.COLOR_BLACK)
 
-"""
-Ecrit par Cedric de Dryver le 09 novembre 2020
-Déplacé dans une fonction par Andréas le 10 novembre 2020
 
-Description: Affichage de fin de partie
 """
+    Ecrit par Cedric de Dryver le 09 novembre 2020
+    Déplacé dans une fonction par Andréas le 10 novembre 2020
+
+    Description: Affichage de fin de partie
+"""
+
 def game_won(stdscr, score):
     stdscr.erase()
     gg = "You won ! Congratz"
@@ -57,6 +61,7 @@ def game_won(stdscr, score):
     if key == ord('q'):
         return True
 
+
 """ Main function
 Auth: Cédric De Dryver, November 09 2020 - 17h27
 Modified by Andréas Bombaert, November 10 2020 - 17h
@@ -66,6 +71,7 @@ All lines have a step-by-step description in French.
 But this main function allows you to play the simplified pac man game. the keys are Z: up, S: down, Q: left, D: right.
 It's better with an AZERTY keyboard.
 """
+
 
 def main(stdscr):
     # Initialisation de la library curse:
@@ -79,10 +85,10 @@ def main(stdscr):
     count_coll = 49
 
     # Initialisation de la carte
-    map = MapGenerator.gen_map("data/map.txt", pos_pacman[0], pos_pacman[1])
+    map = gen_map("data/map.txt", pos_pacman[0], pos_pacman[1])
 
     # Initialisation du Terrain curses
-    MapGenerator.cast_map(map, stdscr)
+    cast_map(map, stdscr)
 
     '''
     Voici la boucle du jeu,
@@ -97,8 +103,8 @@ def main(stdscr):
         stdscr.addstr(1, 22, "Score: ", curses.color_pair(3))  # Refreshing du score a chaques mouvement.
         stdscr.addstr(1, 29, str(score.get_score), curses.color_pair(3))
 
-        #affichage de la carte au début
-        MapGenerator.cast_map(map, stdscr)
+        # affichage de la carte au début
+        cast_map(map, stdscr)
 
         # Si le compteur de collectible atteint 0, alors la partie est fini et affiche un ecran de victoire (Appuyer
         # sur Q pour quitter cet ecran).
