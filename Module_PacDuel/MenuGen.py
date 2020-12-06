@@ -36,11 +36,19 @@ class Menu:
         except IOError:
             print('Erreur IO.')
 
+
+    """
+    
+    RAISE: curses.error : Writing outside the pad, window, or subwindow will cause a curses.error Exception.  
+                        Also, attempting to write the lower right corner of a pad, window, or sub window will cause an 
+                        exception to be raised after the character is printed.  You may safely ignore the error in this 
+                        case.
+    """
     def cast_menu(self, menu_ar, color_menu_ar, stdscr):
-        try:
-            for x in range(len(menu_ar)):
-                for y in range(len(menu_ar[x])):
-                    stdscr.addstr(x, y, menu_ar[x][y], curses.color_pair(color_menu_ar[x][y]))
-        except:
-            raise curses.error
+        for x in range(len(menu_ar)):
+            for y in range(len(menu_ar[x])):
+                if color_menu_ar[x][y]== " ":
+                    stdscr.addstr(x, y, str(menu_ar[x][y]))
+                elif color_menu_ar[x][y] == "4":
+                    stdscr.addstr(x, y, str(menu_ar[x][y]), curses.color_pair(4))
 

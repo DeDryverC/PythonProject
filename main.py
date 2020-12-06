@@ -10,6 +10,7 @@ Desc: MVP du projet 2TI en python.
 
 # IMPORT SECTION
 import curses
+
 from multiprocessing import Process, Queue
 
 # from Projet.Module_PacDuel.MappingGen import Map
@@ -39,6 +40,11 @@ def init_win(stdscr):
     curses.init_pair(1, curses.COLOR_CYAN, curses.COLOR_BLACK)
     curses.init_pair(2, curses.COLOR_GREEN, curses.COLOR_BLACK)
     curses.init_pair(3, curses.COLOR_YELLOW, curses.COLOR_BLACK)
+    curses.init_pair(4, curses.COLOR_RED, curses.COLOR_BLACK)
+    curses.resize_term(250, 250)
+    stdscr.clear()
+    stdscr.refresh()
+
 
 
 """
