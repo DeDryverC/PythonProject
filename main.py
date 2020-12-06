@@ -1,28 +1,28 @@
 """
 Auth: Cédric De Dryver, Andréas Bombaert,
 Last Date: 10/11/2020
-
 Update 10/11/2020 : -le mvp utilise maintenant des fichiers pour générer les cartes
                     et se déplacer dessus
                     -quelques optimisations et aération du code
-
 VERSION : INSTABLE
-
 Desc: MVP du projet 2TI en python.
-
 """
 
 # IMPORT SECTION
 import curses
+from multiprocessing import Process, Queue
 
-from PythonProject.Module_PacDuel.MappingGen import gen_map, \
-    cast_map  # Si jamais, supprimez cette ligne et re-importez grace a Pycharm ligne 82
-from PythonProject.Module_PacDuel.ScoreCount import ScoreCount  # Pareil ligne 78
+# from Projet.Module_PacDuel.MappingGen import Map
+# from Projet.Module_PacDuel.MovingEntities import Pacman
+# from Projet.Module_PacDuel.ScoreCount import ScoreCount
+
+from PythonProject.Module_PacDuel.MappingGen import Map
+from PythonProject.Module_PacDuel.MovingEntities import Pacman
+from PythonProject.Module_PacDuel.ScoreCount import ScoreCount
 
 """
 Ecrit par Cedric de Dryver le 09 novembre 2020
 Déplacé dans une fonction par Andréas le 10 novembre 2020
-
 Description: initialisation de la fenetre avec curses ainsi que l'initialisation 
 des paires de couleur
 """
@@ -43,9 +43,9 @@ def init_win(stdscr):
 """
     Ecrit par Cedric de Dryver le 09 novembre 2020
     Déplacé dans une fonction par Andréas le 10 novembre 2020
-
     Description: Affichage de fin de partie
 """
+
 
 def game_won(stdscr, score):
     stdscr.erase()
@@ -62,12 +62,12 @@ def game_won(stdscr, score):
         return True
 
 
+
+
 """ Main function
 Auth: Cédric De Dryver, November 09 2020 - 17h27
 Modified by Andréas Bombaert, November 10 2020 - 17h
-
 All lines have a step-by-step description in French.
-
 But this main function allows you to play the simplified pac man game. the keys are Z: up, S: down, Q: left, D: right.
 It's better with an AZERTY keyboard.
 """
@@ -78,21 +78,24 @@ def main(stdscr):
     init_win(stdscr)
 
     # Position du PacMan et sa position initiale.
-    pos_pacman = [4, 9]
+    pacman = Pacman(3)
+    pacman.setpos(4, 9)
 
     # Initialisation du score.
     score = ScoreCount()
     count_coll = 49
 
     # Initialisation de la carte
-    map = gen_map("data/map.txt", pos_pacman[0], pos_pacman[1])
+    game_map = Map("data/map.txt", pacman.pos[0], pacman.pos[1])
+    game_map.gen_map()
+    map_ar = game_map.map_ar
 
     # Initialisation du Terrain curses
-    cast_map(map, stdscr)
+    game_map.cast_map(map_ar, stdscr)
 
     '''
     Voici la boucle du jeu,
-    pour quitter cette boucle, appuyez sur "p" ou rammassez tout les collectibles
+    pour quitter cette boucle, appuyez sur "p" ou ramassez tout les collectibles
     touches de mouvement:
     Z : Haut
     S : Bas
@@ -104,7 +107,7 @@ def main(stdscr):
         stdscr.addstr(1, 29, str(score.get_score), curses.color_pair(3))
 
         # affichage de la carte au début
-        cast_map(map, stdscr)
+        game_map.cast_map(map_ar, stdscr)
 
         # Si le compteur de collectible atteint 0, alors la partie est fini et affiche un ecran de victoire (Appuyer
         # sur Q pour quitter cet ecran).
@@ -122,70 +125,8 @@ def main(stdscr):
         # il se déplace et récupere des points (si il y en a)
         # Si l'user decide, il peut quitter le jeu en appuyant sur P (attention pas de verification).
 
-        if key == ord('z'):
-            if map[pos_pacman[0] - 1][pos_pacman[1]] == "#":
-                pass
-            else:
-                if map[pos_pacman[0] - 1][pos_pacman[1]] != " ":
-                    count_coll -= 1
-                if map[pos_pacman[0] - 1][pos_pacman[1]] == "*":
-                    score.add_score(100)
-                if map[pos_pacman[0]][pos_pacman[1] - 1] == "x":
-                    score.add_score(200)
-                if map[pos_pacman[0] - 1][pos_pacman[1]] == "^":
-                    score.add_score(500)
-                map[pos_pacman[0] - 1][pos_pacman[1]] = "o"
-                map[pos_pacman[0]][pos_pacman[1]] = " "
-                pos_pacman[0] -= 1
-
-        if key == ord('q'):
-            if map[pos_pacman[0]][pos_pacman[1] - 1] == "#":
-                pass
-            else:
-                if map[pos_pacman[0]][pos_pacman[1] - 1] != " ":
-                    count_coll -= 1
-                if map[pos_pacman[0]][pos_pacman[1] - 1] == "*":
-                    score.add_score(100)
-                if map[pos_pacman[0]][pos_pacman[1] - 1] == "x":
-                    score.add_score(200)
-                if map[pos_pacman[0]][pos_pacman[1] - 1] == "^":
-                    score.add_score(500)
-                map[pos_pacman[0]][pos_pacman[1] - 1] = "o"
-                map[pos_pacman[0]][pos_pacman[1]] = " "
-                pos_pacman[1] -= 1
-
-        if key == ord('s'):
-            if map[pos_pacman[0] + 1][pos_pacman[1]] == "#":
-                pass
-            else:
-                if map[pos_pacman[0] + 1][pos_pacman[1]] != " ":
-                    count_coll -= 1
-                if map[pos_pacman[0] + 1][pos_pacman[1]] == "*":
-                    score.add_score(100)
-                if map[pos_pacman[0] + 1][pos_pacman[1]] == "x":
-                    score.add_score(200)
-                if map[pos_pacman[0] + 1][pos_pacman[1]] == "^":
-                    score.add_score(500)
-                map[pos_pacman[0] + 1][pos_pacman[1]] = "o"
-                map[pos_pacman[0]][pos_pacman[1]] = " "
-                pos_pacman[0] += 1
-
-        if key == ord('d'):
-            if map[pos_pacman[0]][pos_pacman[1] + 1] == "#":
-                pass
-            else:
-                if map[pos_pacman[0]][pos_pacman[1] + 1] != " ":
-                    count_coll -= 1
-                if map[pos_pacman[0]][pos_pacman[1] + 1] == "*":
-                    score.add_score(100)
-                if map[pos_pacman[0]][pos_pacman[1] + 1] == "x":
-                    score.add_score(200)
-                if map[pos_pacman[0]][pos_pacman[1] + 1] == "^":
-                    score.add_score(500)
-                map[pos_pacman[0]][pos_pacman[1] + 1] = "o"
-                map[pos_pacman[0]][pos_pacman[1]] = " "
-                pos_pacman[1] += 1
-
+        if key == ord('z') or key == ord('q') or key == ord('s') or key == ord('d'):
+            key, map_ar, score, count_coll = pacman.moves(key, map_ar, score, count_coll)
         if key == ord('p'):
             break
 
