@@ -27,7 +27,7 @@ class Map:
             with open(self.file) as file:
                 for line in file:
                     curr = []
-                    for x in range(0, len(line)-1):
+                    for x in range(0, len(line) - 1):
                         curr.append(line[x])
                     self.__map_ar.append(curr)
             self.__map_ar[self.x][self.y] = "o"

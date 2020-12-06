@@ -17,6 +17,7 @@ from multiprocessing import Process, Queue
 # from Projet.Module_PacDuel.ScoreCount import ScoreCount
 
 from PythonProject.Module_PacDuel.MappingGen import Map
+from PythonProject.Module_PacDuel.MenuGen import Menu
 from PythonProject.Module_PacDuel.MovingEntities import Pacman
 from PythonProject.Module_PacDuel.ScoreCount import ScoreCount
 
@@ -85,6 +86,18 @@ def main(stdscr):
     score = ScoreCount()
     count_coll = 49
 
+    game_menu = Menu("data/menu.txt", "data/menu_col.txt")
+    game_menu.gen_menu()
+    menu_ar = game_menu.menu_ar
+    color_menu_ar = game_menu.color_menu_ar
+
+    game_menu.cast_menu(menu_ar, color_menu_ar, stdscr)
+
+    while True:
+        game_menu.cast_menu(menu_ar, color_menu_ar, stdscr)
+
+
+"""
     # Initialisation de la carte
     game_map = Map("data/map.txt", pacman.pos[0], pacman.pos[1])
     game_map.gen_map()
@@ -129,7 +142,7 @@ def main(stdscr):
             key, map_ar, score, count_coll = pacman.moves(key, map_ar, score, count_coll)
         if key == ord('p'):
             break
-
+"""
 
 if __name__ == "__main__":
     curses.wrapper(main)
