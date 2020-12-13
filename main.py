@@ -76,46 +76,9 @@ def game_won(stdscr, score):
         return True
 
 
-def print_menu(stdscr, selected_row_idx):
-    h, w = stdscr.getmaxyx()
-    menu = ['Gamemode', 'Scoreboard', 'Settings', 'Exit']
-    pacman_logo = ["___________     ____   _____ _____    ____","  \_  __ \__ \  _/ ___\ /      \__  \  /    \ ","     |  |_>/ __ \\\   \___|  | |  |/ _  \|   |  \  ","     |  __(____  /\____  >__|_|_ (____  /___|  /  ","   |__|      \/      \/       \/    \/     \/ "]
-    for idx, row in enumerate(pacman_logo):
-        x = w // 2 - len(row) // 2
-        y = h // 2 - len(pacman_logo) // 2 + idx
-        stdscr.addstr(y, x,row, curses.color_pair(4))
 
 
-    for idx, row in enumerate(menu):
-        x = w // 2 - len(row) // 2
-        y = h // 2 - len(menu) // 2 + idx + 6
-        if idx == (selected_row_idx-5):
-            stdscr.attron(curses.color_pair(5))
-            stdscr.addstr(y, x, row)
-            stdscr.attroff(curses.color_pair(5))
-        else:
-            stdscr.addstr(y, x, row)
 
-    stdscr.refresh()
-
-def menu_leave(stdscr, selected_row_idx):
-    stdscr.clear()
-    h, w = stdscr.getmaxyx()
-    leave_menu = ['Yes', 'No']
-    leave_message = "Are you sure you want to exit ?"
-    x = w // 2 - len(leave_message) // 2
-    y = h // 2 - 3
-    stdscr.addstr(y, x, leave_message)
-    for idx, row in enumerate(leave_menu):
-        x = w // 2 - len(row) // 2
-        y = h // 2 - len(leave_menu) // 2 + idx
-        if idx == (selected_row_idx - 4):
-            stdscr.attron(curses.color_pair(5))
-            stdscr.addstr(y, x, row)
-            stdscr.attroff(curses.color_pair(5))
-        else:
-            stdscr.addstr(y, x, row)
-    stdscr.refresh()
 
 """ Main function
 Auth: Cédric De Dryver, November 09 2020 - 17h27
