@@ -184,9 +184,9 @@ def main(stdscr):
     stdscr.refresh()
     while True:
         key = stdscr.getch()
-        if key == curses.KEY_UP or key == ord('z') and current_row > 5:
+        if (key == curses.KEY_UP or key == ord('z')) and current_row > 5:
             current_row -= 1
-        elif key == curses.KEY_DOWN or key == ord('s') and current_row < len(menu) -1 + 5:
+        elif (key == curses.KEY_DOWN or key == ord('s')) and current_row < len(menu) -1 + 5:
             current_row += 1
         elif key == curses.KEY_ENTER or key in [10, 13]:
 
@@ -195,12 +195,13 @@ def main(stdscr):
                 menu_obj.menu_gamemode(stdscr, gamemode_current_row)
                 while True:
                     key = stdscr.getch()
-                    if key == curses.KEY_LEFT or key == ord('q') and gamemode_current_row == 7:
+                    if (key == curses.KEY_LEFT or key == ord('q')) and gamemode_current_row == 7:
                         gamemode_current_row -= 1
-                    elif key == curses.KEY_RIGHT or key == ord('d') and gamemode_current_row == 6:
+                    elif (key == curses.KEY_RIGHT or key == ord('d')) and gamemode_current_row == 6:
                         gamemode_current_row += 1
                     elif key == curses.KEY_ENTER or key in [10, 13]:
                         if gamemode_current_row == 6:
+                            stdscr.clear()
                             game_loop(stdscr, 1)
                         elif gamemode_current_row == 7:
                             stdscr.clear()
@@ -218,9 +219,9 @@ def main(stdscr):
                 menu_obj.menu_leave(stdscr, leave_current_row)
                 while True:
                     key = stdscr.getch()
-                    if key == curses.KEY_UP or key == ord('z') and leave_current_row == 5:
+                    if (key == curses.KEY_UP or key == ord('z')) and leave_current_row == 5:
                         leave_current_row -= 1
-                    elif key == curses.KEY_DOWN or key == ord('s') and leave_current_row == 4:
+                    elif (key == curses.KEY_DOWN or key == ord('s')) and leave_current_row == 4:
                         leave_current_row += 1
                     elif key == curses.KEY_ENTER or key in [10, 13]:
                         if leave_current_row == 4:

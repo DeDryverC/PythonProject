@@ -1,5 +1,5 @@
 import curses
-from Projet.PythonProject.Module_PacDuel.MovingEntities import Pacman, Ghost
+from PythonProject.Module_PacDuel.MovingEntities import Pacman, Ghost
 
 class Map:
     def __init__(self, file_name, pos1, pos2):
@@ -61,6 +61,8 @@ class Map:
                         stdscr.addstr(x, y, "*", curses.color_pair(1))
                     elif map_ar[x][y] == "o":
                         stdscr.addstr(x, y, "o", curses.color_pair(3))
+                    elif isinstance(map_ar[x][y], Ghost):
+                        stdscr.addstr(x, y, "M", map_ar[x][y].color)
                     elif map_ar[x][y] == " ":
                         stdscr.addstr(x, y, " ")
         except:
