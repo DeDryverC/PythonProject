@@ -27,7 +27,7 @@ class Map:
             with open(self.file) as file:
                 for line in file:
                     curr = []
-                    for x in range(0, len(line)-1):
+                    for x in range(0, len(line) - 1):
                         curr.append(line[x])
                     self.__map_ar.append(curr)
             self.__map_ar[self.x][self.y] = "o"
@@ -47,20 +47,22 @@ class Map:
 
     # affiche la map sur l'écran
     def cast_map(self, map_ar, stdscr):
-        for x in range(len(map_ar)):
-            for y in range(len(map_ar[x])):
-                print(map_ar[x][y])
-                if map_ar[x][y] == "#":
-                    stdscr.addstr(x, y, "#")
-                elif map_ar[x][y] == "^":
-                    stdscr.addstr(x, y, "^", curses.color_pair(2))
-                elif map_ar[x][y] == "x":
-                    stdscr.addstr(x, y, "x", curses.color_pair(1))
-                elif map_ar[x][y] == "*":
-                    stdscr.addstr(x, y, "*", curses.color_pair(1))
-                elif map_ar[x][y] == "o":
-                    stdscr.addstr(x, y, "o", curses.color_pair(3))
-                elif isinstance(map_ar[x][y], Ghost):
-                    stdscr.addstr(x, y, "M", map_ar[x][y].color)
-                elif map_ar[x][y] == " ":
-                    stdscr.addstr(x, y, " ")
+        try:
+            for x in range(len(map_ar)):
+                for y in range(len(map_ar[x])):
+                    print(map_ar[x][y])
+                    if map_ar[x][y] == "#":
+                        stdscr.addstr(x, y, "#")
+                    elif map_ar[x][y] == "^":
+                        stdscr.addstr(x, y, "^", curses.color_pair(2))
+                    elif map_ar[x][y] == "x":
+                        stdscr.addstr(x, y, "x", curses.color_pair(1))
+                    elif map_ar[x][y] == "*":
+                        stdscr.addstr(x, y, "*", curses.color_pair(1))
+                    elif map_ar[x][y] == "o":
+                        stdscr.addstr(x, y, "o", curses.color_pair(3))
+                    elif map_ar[x][y] == " ":
+                        stdscr.addstr(x, y, " ")
+        except:
+            raise curses.error
+

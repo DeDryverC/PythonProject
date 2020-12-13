@@ -14,9 +14,11 @@ import random
 import time
 from multiprocessing import Process, Queue
 
-from Projet.PythonProject.Module_PacDuel.MappingGen import Map
-from Projet.PythonProject.Module_PacDuel.MovingEntities import Pacman, Ghost
-from Projet.PythonProject.Module_PacDuel.ScoreCount import ScoreCount
+from PythonProject.Module_PacDuel.MappingGen import Map
+from PythonProject.Module_PacDuel.MovingEntities import Pacman, Ghost
+from PythonProject.Module_PacDuel.ScoreCount import ScoreCount
+from PythonProject.Module_PacDuel.MenuGen import Menu
+
 
 """
 Ecrit par Cedric de Dryver le 09 novembre 2020
@@ -27,6 +29,7 @@ des paires de couleur
 
 
 def init_win(stdscr):
+    curses.curs_set(0)
     curses.noecho()
     curses.cbreak()
     curses.curs_set(0)
@@ -36,6 +39,16 @@ def init_win(stdscr):
     curses.init_pair(1, curses.COLOR_CYAN, curses.COLOR_BLACK)
     curses.init_pair(2, curses.COLOR_GREEN, curses.COLOR_BLACK)
     curses.init_pair(3, curses.COLOR_YELLOW, curses.COLOR_BLACK)
+    curses.init_pair(4, curses.COLOR_RED, curses.COLOR_BLACK)
+    curses.init_pair(5, curses.COLOR_BLACK, curses.COLOR_WHITE)
+    y, x = stdscr.getmaxyx()
+    resize = curses.is_term_resized(y, x)
+
+    # Resize si c'est trop petit
+    if resize is True:
+        stdscr.clear()
+        curses.resizeterm(30, 25)
+        stdscr.refresh()
 
 
 """
@@ -86,8 +99,6 @@ It's better with an AZERTY keyboard.
 
 
 def game_loop(stdscr, lives):
-    # Initialisation de la library curse:
-    init_win(stdscr)
 
     # Position du PacMan et sa position initiale.
     pacman = Pacman(lives)
@@ -161,7 +172,54 @@ def game_loop(stdscr, lives):
 
 
 def main(stdscr):
-    game_loop(stdscr, 1)
+    # Initialisation de la library curse:
+    init_win(stdscr)
+    # game_loop(stdscr, 1)
+    menu_obj = Menu(5)
+    current_row = menu_obj.current_row
+    menu = menu_obj.menu_tab
+    menu_obj.print_menu(stdscr, current_row)
+
+
+
+    stdscr.refresh()
+    while True:
+        key = stdscr.getch()
+        if key == curses.KEY_UP or key == ord('z') and current_row > 5:
+            current_row -= 1
+        elif key == curses.KEY_DOWN or key == ord('s') and current_row < len(menu) -1 + 5:
+            current_row += 1
+        elif key == curses.KEY_ENTER or key in [10, 13]:
+
+            if current_row == 5:
+                pass
+                # GAMEMODE CHOICE
+            elif current_row == 6:
+                pass
+                # DISPLAY SCOREBOARD
+            elif current_row == 7:
+                pass
+                # DISPLAY SETTINGS
+            elif current_row == 8:
+                leave_current_row = 4
+                menu_obj.menu_leave(stdscr, leave_current_row)
+                while True:
+                    key = stdscr.getch()
+                    if key == curses.KEY_UP or key == ord('z') and leave_current_row == 5:
+                        leave_current_row -= 1
+                    elif key == curses.KEY_DOWN or key == ord('s') and leave_current_row == 4:
+                        leave_current_row += 1
+                    elif key == curses.KEY_ENTER or key in [10, 13]:
+                        if leave_current_row == 4:
+                            exit()
+                        elif leave_current_row == 5:
+                            stdscr.clear()
+                            break
+                    menu_obj.menu_leave(stdscr, leave_current_row)
+                    stdscr.refresh()
+                # VERIFICATION BEFORE LEAVING
+        menu_obj.print_menu(stdscr, current_row)
+        stdscr.refresh()
 
 
 if __name__ == "__main__":
