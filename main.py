@@ -31,6 +31,7 @@ des paires de couleur
 
 
 def init_win(stdscr):
+    curses.curs_set(0)
     curses.noecho()
     curses.cbreak()
     curses.curs_set(0)
@@ -41,9 +42,15 @@ def init_win(stdscr):
     curses.init_pair(2, curses.COLOR_GREEN, curses.COLOR_BLACK)
     curses.init_pair(3, curses.COLOR_YELLOW, curses.COLOR_BLACK)
     curses.init_pair(4, curses.COLOR_RED, curses.COLOR_BLACK)
-    curses.resize_term(250, 250)
-    stdscr.clear()
-    stdscr.refresh()
+    curses.init_pair(5, curses.COLOR_BLACK, curses.COLOR_WHITE)
+    y, x = stdscr.getmaxyx()
+    resize = curses.is_term_resized(y, x)
+
+    # Action in loop if resize is True:
+    if resize is True:
+        stdscr.clear()
+        curses.resizeterm(30, 25)
+        stdscr.refresh()
 
 
 
@@ -69,7 +76,46 @@ def game_won(stdscr, score):
         return True
 
 
+def print_menu(stdscr, selected_row_idx):
+    h, w = stdscr.getmaxyx()
+    menu = ['Gamemode', 'Scoreboard', 'Settings', 'Exit']
+    pacman_logo = ["___________     ____   _____ _____    ____","  \_  __ \__ \  _/ ___\ /      \__  \  /    \ ","     |  |_>/ __ \\\   \___|  | |  |/ _  \|   |  \  ","     |  __(____  /\____  >__|_|_ (____  /___|  /  ","   |__|      \/      \/       \/    \/     \/ "]
+    for idx, row in enumerate(pacman_logo):
+        x = w // 2 - len(row) // 2
+        y = h // 2 - len(pacman_logo) // 2 + idx
+        stdscr.addstr(y, x,row, curses.color_pair(4))
 
+
+    for idx, row in enumerate(menu):
+        x = w // 2 - len(row) // 2
+        y = h // 2 - len(menu) // 2 + idx + 6
+        if idx == (selected_row_idx-5):
+            stdscr.attron(curses.color_pair(5))
+            stdscr.addstr(y, x, row)
+            stdscr.attroff(curses.color_pair(5))
+        else:
+            stdscr.addstr(y, x, row)
+
+    stdscr.refresh()
+
+def menu_leave(stdscr, selected_row_idx):
+    stdscr.clear()
+    h, w = stdscr.getmaxyx()
+    leave_menu = ['Yes', 'No']
+    leave_message = "Are you sure you want to exit ?"
+    x = w // 2 - len(leave_message) // 2
+    y = h // 2 - 3
+    stdscr.addstr(y, x, leave_message)
+    for idx, row in enumerate(leave_menu):
+        x = w // 2 - len(row) // 2
+        y = h // 2 - len(leave_menu) // 2 + idx
+        if idx == (selected_row_idx - 4):
+            stdscr.attron(curses.color_pair(5))
+            stdscr.addstr(y, x, row)
+            stdscr.attroff(curses.color_pair(5))
+        else:
+            stdscr.addstr(y, x, row)
+    stdscr.refresh()
 
 """ Main function
 Auth: Cédric De Dryver, November 09 2020 - 17h27
@@ -92,16 +138,52 @@ def main(stdscr):
     score = ScoreCount()
     count_coll = 49
 
-    game_menu = Menu("data/menu.txt", "data/menu_col.txt")
-    game_menu.gen_menu()
-    menu_ar = game_menu.menu_ar
-    color_menu_ar = game_menu.color_menu_ar
+    current_row = 5
+    menu = ['Gamemode', 'Scoreboard', 'Settings', 'Exit']
+    print_menu(stdscr, current_row)
 
-    game_menu.cast_menu(menu_ar, color_menu_ar, stdscr)
 
+
+    stdscr.refresh()
     while True:
-        game_menu.cast_menu(menu_ar, color_menu_ar, stdscr)
+        key = stdscr.getch()
 
+        if key == curses.KEY_UP or key == ord('z') and current_row > 5:
+            current_row -= 1
+
+        elif key == curses.KEY_DOWN or key == ord('s') and current_row < len(menu) -1 + 5:
+            current_row += 1
+
+        elif key == curses.KEY_ENTER or key in [10, 13]:
+            if current_row == 5:
+                pass
+                # GAMEMODE CHOICE
+            elif current_row == 6:
+                pass
+                # DISPLAY SCOREBOARD
+            elif current_row == 7:
+                pass
+                # DISPLAY SETTINGS
+            elif current_row == 8:
+                leave_current_row = 4
+                menu_leave(stdscr, leave_current_row)
+                while True:
+                    key = stdscr.getch()
+                    if key == curses.KEY_UP or key == ord('z') and leave_current_row == 5:
+                        leave_current_row -= 1
+                    elif key == curses.KEY_DOWN or key == ord('s') and leave_current_row == 4:
+                        leave_current_row += 1
+                    elif key == curses.KEY_ENTER or key in [10, 13]:
+                        if leave_current_row == 4:
+                            exit()
+                        elif leave_current_row == 5:
+                            stdscr.clear()
+                            break
+                    menu_leave(stdscr, leave_current_row)
+                    stdscr.refresh()
+                # VERIFICATION BEFORE LEAVING
+        print_menu(stdscr, current_row)
+        stdscr.refresh()
 
 """
     # Initialisation de la carte

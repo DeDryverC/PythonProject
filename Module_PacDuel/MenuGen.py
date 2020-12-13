@@ -24,6 +24,7 @@ class Menu:
                     for x in range(0, len(line) - 1):
                         curr.append(line[x])
                     self.__menu_ar.append(curr)
+            line = 0
             with open(self.__color_filename) as file:
                 for line in file:
                     curr = []
@@ -47,8 +48,8 @@ class Menu:
     def cast_menu(self, menu_ar, color_menu_ar, stdscr):
         for x in range(len(menu_ar)):
             for y in range(len(menu_ar[x])):
-                if color_menu_ar[x][y]== " ":
-                    stdscr.addstr(x, y, str(menu_ar[x][y]))
-                elif color_menu_ar[x][y] == "4":
-                    stdscr.addstr(x, y, str(menu_ar[x][y]), curses.color_pair(4))
+                if menu_ar[x][y] == "_":
+                    stdscr.addstr(x, y, '_')
+                elif menu_ar[x][y] == '|':
+                    stdscr.addstr(x, y, '|')
 
