@@ -2,15 +2,15 @@ import curses
 
 
 class Menu:
-    def __init__(self, filename, color_filename):
-        self.__current_row = 5
+    def __init__(self, start_row):
+        self.__current_row = start_row
         self.__menu = ['Gamemode', 'Scoreboard', 'Settings', 'Exit']
         self.__logo = ["___________     ____   _____ _____    ____","  \_  __ \__ \  _/ ___\ /      \__  \  /    \ ","     |  |_>/ __ \\\   \___|  | |  |/ _  \|   |  \  ","     |  __(____  /\____  >__|_|_ (____  /___|  /  ","   |__|      \/      \/       \/    \/     \/ "]
         self.__leave_menu = ['Yes', 'No']
         self.__leave_message = "Are you sure you want to exit ?"
 
     @property
-    def menu(self):
+    def menu_tab(self):
         return self.__menu
 
     @property

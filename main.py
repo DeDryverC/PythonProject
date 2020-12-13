@@ -10,17 +10,14 @@ Desc: MVP du projet 2TI en python.
 
 # IMPORT SECTION
 import curses
-
+import random
+import time
 from multiprocessing import Process, Queue
 
-# from Projet.Module_PacDuel.MappingGen import Map
-# from Projet.Module_PacDuel.MovingEntities import Pacman
-# from Projet.Module_PacDuel.ScoreCount import ScoreCount
-
 from PythonProject.Module_PacDuel.MappingGen import Map
-from PythonProject.Module_PacDuel.MenuGen import Menu
-from PythonProject.Module_PacDuel.MovingEntities import Pacman
+from PythonProject.Module_PacDuel.MovingEntities import Pacman, Ghost
 from PythonProject.Module_PacDuel.ScoreCount import ScoreCount
+from PythonProject.Module_PacDuel.MenuGen import Menu
 
 """
 Ecrit par Cedric de Dryver le 09 novembre 2020
@@ -46,12 +43,11 @@ def init_win(stdscr):
     y, x = stdscr.getmaxyx()
     resize = curses.is_term_resized(y, x)
 
-    # Action in loop if resize is True:
+    # Resize si c'est trop petit
     if resize is True:
         stdscr.clear()
         curses.resizeterm(30, 25)
         stdscr.refresh()
-
 
 
 """
@@ -76,7 +72,19 @@ def game_won(stdscr, score):
         return True
 
 
+def game_lost(stdscr, score):
+    stdscr.erase()
+    gg = "You Lost ! Better luck next time"
+    endmessage = "Press Q to quit the game"
+    stdscr.addstr(1, 1, gg, curses.color_pair(3))
+    stdscr.addstr(2, 1, "Score: ", curses.color_pair(3))
+    stdscr.addstr(2, 7, str(score.get_score), curses.color_pair(3))
+    stdscr.addstr(3, 1, endmessage, curses.color_pair(3))
+    stdscr.refresh()
 
+    key = stdscr.getch()
+    if key == ord('q'):
+        return True
 
 
 
@@ -89,70 +97,25 @@ It's better with an AZERTY keyboard.
 """
 
 
-def main(stdscr):
-    # Initialisation de la library curse:
-    init_win(stdscr)
+def game_loop(stdscr, lives):
 
     # Position du PacMan et sa position initiale.
-    pacman = Pacman(3)
+    pacman = Pacman(lives)
     pacman.setpos(4, 9)
 
     # Initialisation du score.
     score = ScoreCount()
     count_coll = 49
 
-    current_row = 5
-    menu = ['Gamemode', 'Scoreboard', 'Settings', 'Exit']
-    print_menu(stdscr, current_row)
-
-
-
-    stdscr.refresh()
-    while True:
-        key = stdscr.getch()
-
-        if key == curses.KEY_UP or key == ord('z') and current_row > 5:
-            current_row -= 1
-
-        elif key == curses.KEY_DOWN or key == ord('s') and current_row < len(menu) -1 + 5:
-            current_row += 1
-
-        elif key == curses.KEY_ENTER or key in [10, 13]:
-            if current_row == 5:
-                pass
-                # GAMEMODE CHOICE
-            elif current_row == 6:
-                pass
-                # DISPLAY SCOREBOARD
-            elif current_row == 7:
-                pass
-                # DISPLAY SETTINGS
-            elif current_row == 8:
-                leave_current_row = 4
-                menu_leave(stdscr, leave_current_row)
-                while True:
-                    key = stdscr.getch()
-                    if key == curses.KEY_UP or key == ord('z') and leave_current_row == 5:
-                        leave_current_row -= 1
-                    elif key == curses.KEY_DOWN or key == ord('s') and leave_current_row == 4:
-                        leave_current_row += 1
-                    elif key == curses.KEY_ENTER or key in [10, 13]:
-                        if leave_current_row == 4:
-                            exit()
-                        elif leave_current_row == 5:
-                            stdscr.clear()
-                            break
-                    menu_leave(stdscr, leave_current_row)
-                    stdscr.refresh()
-                # VERIFICATION BEFORE LEAVING
-        print_menu(stdscr, current_row)
-        stdscr.refresh()
-
-"""
     # Initialisation de la carte
     game_map = Map("data/map.txt", pacman.pos[0], pacman.pos[1])
     game_map.gen_map()
     map_ar = game_map.map_ar
+
+
+    # Position du/des fantomes et leur(s) position initiale
+    ghost1 = Ghost(curses.color_pair(2))
+    map_ar = ghost1.set_init_pos(map_ar)
 
     # Initialisation du Terrain curses
     game_map.cast_map(map_ar, stdscr)
@@ -166,9 +129,16 @@ def main(stdscr):
     Q : Gauche
     D : Droite
     '''
+
     while True:
-        stdscr.addstr(1, 22, "Score: ", curses.color_pair(3))  # Refreshing du score a chaques mouvement.
+        if pacman.lives == 0:
+            if game_lost(stdscr, score):
+                break
+
+        stdscr.addstr(1, 22, "Score: ", curses.color_pair(3))  # Refreshing du score a chaque mouvement.
         stdscr.addstr(1, 29, str(score.get_score), curses.color_pair(3))
+        stdscr.addstr(1, 33, "Vies : ", curses.color_pair(3))
+        stdscr.addstr(1, 40, str(pacman.lives), curses.color_pair(3))
 
         # affichage de la carte au début
         game_map.cast_map(map_ar, stdscr)
@@ -191,9 +161,64 @@ def main(stdscr):
 
         if key == ord('z') or key == ord('q') or key == ord('s') or key == ord('d'):
             key, map_ar, score, count_coll = pacman.moves(key, map_ar, score, count_coll)
+            map_ar = ghost1.moves(map_ar, random.randint(1, 4))
+            if pacman.on_ghost(ghost1):
+                pacman.death()
+                # todo fonction pour afficher qu'une vie a été perdue + presser une touche pour passer a la prochaine vie
+                game_loop(stdscr, pacman.lives)
         if key == ord('p'):
             break
-"""
+
+
+def main(stdscr):
+    # Initialisation de la library curse:
+    init_win(stdscr)
+    # game_loop(stdscr, 1)
+    menu_obj = Menu(5)
+    current_row = menu_obj.current_row
+    menu = menu_obj.menu_tab
+    menu_obj.print_menu(stdscr, current_row)
+
+
+
+    stdscr.refresh()
+    while True:
+        key = stdscr.getch()
+        if key == curses.KEY_UP or key == ord('z') and current_row > 5:
+            current_row -= 1
+        elif key == curses.KEY_DOWN or key == ord('s') and current_row < len(menu) -1 + 5:
+            current_row += 1
+        elif key == curses.KEY_ENTER or key in [10, 13]:
+
+            if current_row == 5:
+                pass
+                # GAMEMODE CHOICE
+            elif current_row == 6:
+                pass
+                # DISPLAY SCOREBOARD
+            elif current_row == 7:
+                pass
+                # DISPLAY SETTINGS
+            elif current_row == 8:
+                leave_current_row = 4
+                menu_obj.menu_leave(stdscr, leave_current_row)
+                while True:
+                    key = stdscr.getch()
+                    if key == curses.KEY_UP or key == ord('z') and leave_current_row == 5:
+                        leave_current_row -= 1
+                    elif key == curses.KEY_DOWN or key == ord('s') and leave_current_row == 4:
+                        leave_current_row += 1
+                    elif key == curses.KEY_ENTER or key in [10, 13]:
+                        if leave_current_row == 4:
+                            exit()
+                        elif leave_current_row == 5:
+                            stdscr.clear()
+                            break
+                    menu_obj.menu_leave(stdscr, leave_current_row)
+                    stdscr.refresh()
+                # VERIFICATION BEFORE LEAVING
+        menu_obj.print_menu(stdscr, current_row)
+        stdscr.refresh()
 
 if __name__ == "__main__":
     curses.wrapper(main)
