@@ -19,6 +19,7 @@ from PythonProject.Module_PacDuel.MovingEntities import Pacman, Ghost
 from PythonProject.Module_PacDuel.ScoreCount import ScoreCount
 from PythonProject.Module_PacDuel.MenuGen import Menu
 
+
 """
 Ecrit par Cedric de Dryver le 09 novembre 2020
 Déplacé dans une fonction par Andréas le 10 novembre 2020
@@ -232,6 +233,7 @@ def main(stdscr):
                 # VERIFICATION BEFORE LEAVING
         menu_obj.print_menu(stdscr, current_row)
         stdscr.refresh()
+
 
 if __name__ == "__main__":
     curses.wrapper(main)

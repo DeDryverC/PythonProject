@@ -1,5 +1,5 @@
 import curses
-
+from Projet.PythonProject.Module_PacDuel.MovingEntities import Pacman, Ghost
 
 class Map:
     def __init__(self, file_name, pos1, pos2):
@@ -65,3 +65,4 @@ class Map:
                         stdscr.addstr(x, y, " ")
         except:
             raise curses.error
+
