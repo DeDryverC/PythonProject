@@ -173,7 +173,6 @@ def game_loop(stdscr, lives):
 def main(stdscr):
     # Initialisation de la library curse:
     init_win(stdscr)
-    # game_loop(stdscr, 1)
     menu_obj = Menu(5)
     current_row = menu_obj.current_row
     menu = menu_obj.menu_tab
@@ -191,8 +190,22 @@ def main(stdscr):
         elif key == curses.KEY_ENTER or key in [10, 13]:
 
             if current_row == 5:
-                pass
-                # GAMEMODE CHOICE
+                gamemode_current_row = 6
+                menu_obj.menu_gamemode(stdscr, gamemode_current_row)
+                while True:
+                    key = stdscr.getch()
+                    if key == curses.KEY_LEFT or key == ord('q') and gamemode_current_row == 7:
+                        gamemode_current_row -= 1
+                    elif key == curses.KEY_RIGHT or key == ord('d') and gamemode_current_row == 6:
+                        gamemode_current_row += 1
+                    elif key == curses.KEY_ENTER or key in [10, 13]:
+                        if gamemode_current_row == 6:
+                            game_loop(stdscr, 1)
+                        elif gamemode_current_row == 7:
+                            stdscr.clear()
+                            break
+                    menu_obj.menu_gamemode(stdscr, gamemode_current_row)
+                    stdscr.refresh()
             elif current_row == 6:
                 pass
                 # DISPLAY SCOREBOARD

@@ -8,6 +8,8 @@ class Menu:
         self.__logo = ["___________     ____   _____ _____    ____","  \_  __ \__ \  _/ ___\ /      \__  \  /    \ ","     |  |_>/ __ \\\   \___|  | |  |/ _  \|   |  \  ","     |  __(____  /\____  >__|_|_ (____  /___|  /  ","   |__|      \/      \/       \/    \/     \/ "]
         self.__leave_menu = ['Yes', 'No']
         self.__leave_message = "Are you sure you want to exit ?"
+        self.__gamemode_menu = ['Solo', 'Duo']
+        self.__gamemode_message = 'Choose your gamemode'
 
     @property
     def menu_tab(self):
@@ -53,6 +55,30 @@ class Menu:
                 stdscr.addstr(y, x, row)
         stdscr.refresh()
 
+    def menu_gamemode(self, stdscr, selected_row_idx):
+        stdscr.clear()
+        h, w = stdscr.getmaxyx()
+        for idx, row in enumerate(self.__logo):
+            x = w // 2 - len(row) // 2
+            y = h // 2 - len(self.__logo) // 2 + idx
+            stdscr.addstr(y, x, row, curses.color_pair(4))
+
+        x = w // 2 - len(self.__gamemode_message) // 2
+        y = h // 2 + 6
+        stdscr.addstr(y, x, self.__gamemode_message)
+        for idx, row in enumerate(self.__gamemode_menu):
+            if idx == 0 and idx == selected_row_idx - 6:
+                x = w // 2 - len(self.__gamemode_menu[0]) - 2
+                stdscr.addstr(y+1, x, self.__gamemode_menu[0], curses.color_pair(5))
+            elif idx == 0:
+                x = w // 2 - len(self.__gamemode_menu[0]) - 2
+                stdscr.addstr(y + 1, x, self.__gamemode_menu[0])
+            if idx == 1 and idx == selected_row_idx - 6:
+                x = w // 2 + 2
+                stdscr.addstr(y+1, x, self.__gamemode_menu[1], curses.color_pair(5))
+            elif idx == 1:
+                x = w // 2 + 2
+                stdscr.addstr(y+1, x, self.__gamemode_menu[1])
 
 """
 def main(stdscr):
