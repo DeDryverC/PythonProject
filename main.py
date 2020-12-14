@@ -311,6 +311,5 @@ def main(stdscr):
         menu_obj.print_menu(stdscr, current_row)
         stdscr.refresh()
 
-
 if __name__ == "__main__":
     curses.wrapper(main)
