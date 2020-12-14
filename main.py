@@ -19,7 +19,6 @@ from PythonProject.Module_PacDuel.MovingEntities import Pacman, Ghost
 from PythonProject.Module_PacDuel.ScoreCount import ScoreCount
 from PythonProject.Module_PacDuel.MenuGen import Menu
 
-
 """
 Ecrit par Cedric de Dryver le 09 novembre 2020
 Déplacé dans une fonction par Andréas le 10 novembre 2020
@@ -41,6 +40,7 @@ def init_win(stdscr):
     curses.init_pair(3, curses.COLOR_YELLOW, curses.COLOR_BLACK)
     curses.init_pair(4, curses.COLOR_RED, curses.COLOR_BLACK)
     curses.init_pair(5, curses.COLOR_BLACK, curses.COLOR_WHITE)
+    curses.init_pair(6, curses.COLOR_BLACK, curses.COLOR_BLUE)
     y, x = stdscr.getmaxyx()
     resize = curses.is_term_resized(y, x)
 
@@ -88,7 +88,6 @@ def game_lost(stdscr, score):
         return True
 
 
-
 """ Main function
 Auth: Cédric De Dryver, November 09 2020 - 17h27
 Modified by Andréas Bombaert, November 10 2020 - 17h
@@ -99,20 +98,16 @@ It's better with an AZERTY keyboard.
 
 
 def game_loop(stdscr, lives):
-
     # Position du PacMan et sa position initiale.
     pacman = Pacman(lives)
-    pacman.setpos(4, 9)
-
-    # Initialisation du score.
-    score = ScoreCount()
-    count_coll = 49
+    pacman.setpos(16, 11)
 
     # Initialisation de la carte
-    game_map = Map("data/map.txt", pacman.pos[0], pacman.pos[1])
+    game_map = Map("data/map1.txt", pacman.pos[0], pacman.pos[1])
     game_map.gen_map()
     map_ar = game_map.map_ar
 
+    # Initialisation du score.
 
     # Position du/des fantomes et leur(s) position initiale
     ghost1 = Ghost(curses.color_pair(2))
@@ -120,6 +115,9 @@ def game_loop(stdscr, lives):
 
     # Initialisation du Terrain curses
     game_map.cast_map(map_ar, stdscr)
+
+    score = ScoreCount()
+    count_coll = game_map.collectibles
 
     '''
     Voici la boucle du jeu,
@@ -171,6 +169,78 @@ def game_loop(stdscr, lives):
             break
 
 
+"""
+auth: C. De Dryver
+    Cette fonction est utilisé pour creer un menu gamemode, et l'utilisateur peut choisir l'un des choix qui s'offre a lui
+    en naviguant d'une réponse a l'autre.
+
+    PRE: (curses) stdscr : Interface console sur laquelle on travaille
+         (Menu) menu_obj : Classe local qui nous permet de creer un menu
+         
+    POST: Creer un choix entre le mode solo ou le mode duo. Solo / Duo
+"""
+
+
+def menu_gamemode(stdscr, menu_obj):
+    gamemode_current_row = 6
+    menu_obj.menu_gamemode(stdscr, gamemode_current_row)
+    while True:
+        key = stdscr.getch()
+        if (key == curses.KEY_LEFT or key == ord('q')) and gamemode_current_row == 7:
+            gamemode_current_row -= 1
+        elif (key == curses.KEY_RIGHT or key == ord('d')) and gamemode_current_row == 6:
+            gamemode_current_row += 1
+        elif key == curses.KEY_ENTER or key in [10, 13]:
+            if gamemode_current_row == 6:
+                stdscr.clear()
+                game_loop(stdscr, 1)
+            elif gamemode_current_row == 7:
+                stdscr.clear()
+                break
+        menu_obj.menu_gamemode(stdscr, gamemode_current_row)
+        stdscr.refresh()
+
+
+"""
+auth: C. De Dryver
+    Cette fonction est utilisé pour creer un menu exit, et l'utilisateur peut choisir l'un des choix qui s'offre a lui
+    en naviguant d'une réponse a l'autre.
+
+    PRE: (curses) stdscr : Interface console sur laquelle on travaille
+         (Menu) menu_obj : Classe local qui nous permet de creer un menu
+         
+    POST: Creer un choix pour quitter l'application. Yes / No
+"""
+
+
+def menu_exit(stdscr, menu_obj):
+    leave_current_row = 4
+    menu_obj.menu_leave(stdscr, leave_current_row)
+    while True:
+        key = stdscr.getch()
+        if (key == curses.KEY_UP or key == ord('z')) and leave_current_row == 5:
+            leave_current_row -= 1
+        elif (key == curses.KEY_DOWN or key == ord('s')) and leave_current_row == 4:
+            leave_current_row += 1
+        elif key == curses.KEY_ENTER or key in [10, 13]:
+            if leave_current_row == 4:
+                exit()
+            elif leave_current_row == 5:
+                stdscr.clear()
+                break
+        menu_obj.menu_leave(stdscr, leave_current_row)
+        stdscr.refresh()
+
+
+"""
+auth: C. De Dryver
+    Ce main va creer un menu de base, ou l'on va choisir ce que l'on peut faire, Le scoreboard et les settings ne sont
+    pas encore implémentée.
+    
+    PRE: (curses) stdscr: interface console sur laquelle on affiche tout.
+"""
+
+
 def main(stdscr):
     # Initialisation de la library curse:
     init_win(stdscr)
@@ -179,35 +249,16 @@ def main(stdscr):
     menu = menu_obj.menu_tab
     menu_obj.print_menu(stdscr, current_row)
 
-
-
-    stdscr.refresh()
     while True:
         key = stdscr.getch()
         if (key == curses.KEY_UP or key == ord('z')) and current_row > 5:
             current_row -= 1
-        elif (key == curses.KEY_DOWN or key == ord('s')) and current_row < len(menu) -1 + 5:
+        elif (key == curses.KEY_DOWN or key == ord('s')) and current_row < len(menu) - 1 + 5:
             current_row += 1
         elif key == curses.KEY_ENTER or key in [10, 13]:
 
             if current_row == 5:
-                gamemode_current_row = 6
-                menu_obj.menu_gamemode(stdscr, gamemode_current_row)
-                while True:
-                    key = stdscr.getch()
-                    if (key == curses.KEY_LEFT or key == ord('q')) and gamemode_current_row == 7:
-                        gamemode_current_row -= 1
-                    elif (key == curses.KEY_RIGHT or key == ord('d')) and gamemode_current_row == 6:
-                        gamemode_current_row += 1
-                    elif key == curses.KEY_ENTER or key in [10, 13]:
-                        if gamemode_current_row == 6:
-                            stdscr.clear()
-                            game_loop(stdscr, 1)
-                        elif gamemode_current_row == 7:
-                            stdscr.clear()
-                            break
-                    menu_obj.menu_gamemode(stdscr, gamemode_current_row)
-                    stdscr.refresh()
+                menu_gamemode(stdscr, menu_obj)
             elif current_row == 6:
                 pass
                 # DISPLAY SCOREBOARD
@@ -215,23 +266,7 @@ def main(stdscr):
                 pass
                 # DISPLAY SETTINGS
             elif current_row == 8:
-                leave_current_row = 4
-                menu_obj.menu_leave(stdscr, leave_current_row)
-                while True:
-                    key = stdscr.getch()
-                    if (key == curses.KEY_UP or key == ord('z')) and leave_current_row == 5:
-                        leave_current_row -= 1
-                    elif (key == curses.KEY_DOWN or key == ord('s')) and leave_current_row == 4:
-                        leave_current_row += 1
-                    elif key == curses.KEY_ENTER or key in [10, 13]:
-                        if leave_current_row == 4:
-                            exit()
-                        elif leave_current_row == 5:
-                            stdscr.clear()
-                            break
-                    menu_obj.menu_leave(stdscr, leave_current_row)
-                    stdscr.refresh()
-                # VERIFICATION BEFORE LEAVING
+                menu_exit(stdscr, menu_obj)
         menu_obj.print_menu(stdscr, current_row)
         stdscr.refresh()
 

@@ -5,6 +5,8 @@ Last date:
 
 Score counter for a game of Pac Man.
 '''
+
+
 class ScoreCount:
     """Initialization of the Class
     Variables: (Int) score => actual score of the running game.
