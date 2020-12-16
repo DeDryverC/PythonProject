@@ -11,6 +11,7 @@ Desc: MVP du projet 2TI en python.
 # IMPORT SECTION
 import curses
 import random
+import time
 
 
 from Projet.PythonProject.Module_PacDuel.MappingGen import Map
@@ -80,32 +81,30 @@ def life_lost(stdscr, lives, score):
         msg = f"You lost one life, you have {lives} life left!"
     else:
         game_lost(stdscr, score)
-    nxt = "Press Enter to go to next life"
+    nxt = "Press any key to go to next life"
 
     stdscr.addstr(1, 1, msg, curses.color_pair(3))
     stdscr.addstr(3, 1, nxt, curses.color_pair(3))
     stdscr.refresh()
 
     key = stdscr.getch()
-    if key == curses.KEY_ENTER:
-        return True
+    return True
 
 
 def game_lost(stdscr, score):
     stdscr.erase()
     gg = "You Lost ! Better luck next time"
-    endmessage = "Press Q to quit the game"
+    endmessage = "Press any key to quit the game"
     stdscr.addstr(1, 1, gg, curses.color_pair(3))
     stdscr.addstr(2, 1, "Score: ", curses.color_pair(3))
     stdscr.addstr(2, 7, str(score.get_score), curses.color_pair(3))
     stdscr.addstr(3, 1, endmessage, curses.color_pair(3))
     stdscr.refresh()
 
-    key = stdscr.getch()
-    if key == ord('q'):
-        stdscr.erase()
-        stdscr.refresh()
-        return True
+    stdscr.getch()
+    stdscr.erase()
+    stdscr.refresh()
+    return True
 
 
 def clear_window(stdscr):
@@ -138,9 +137,17 @@ def game_loop(stdscr, lives):
     # Position du/des fantomes et leur(s) position initiale
     ghosts = []
     ghost1 = Ghost(curses.color_pair(2))
+    ghost2 = Ghost(curses.color_pair(4))
+    ghost3 = Ghost(curses.color_pair(3))
+    ghost4 = Ghost(curses.color_pair(1))
     ghosts.append(ghost1)
+    ghosts.append(ghost2)
+    ghosts.append(ghost3)
+    ghosts.append(ghost4)
     map_ar = ghost1.set_init_pos(map_ar)
-
+    map_ar = ghost2.set_init_pos(map_ar)
+    map_ar = ghost3.set_init_pos(map_ar)
+    map_ar = ghost4.set_init_pos(map_ar)
     # Initialisation du Terrain curses
     game_map.cast_map(map_ar, stdscr)
 
@@ -198,7 +205,7 @@ def game_loop(stdscr, lives):
             for x in ghosts:
                 # direction 1: forward, 2: left, 3: backward, 4: right
                 prev_ghost = x.pos.copy()
-                map_ar = x.moves(map_ar, direction)  # every ghost moves
+                map_ar = x.moves(map_ar, direction, 1)  # every ghost moves
                 if x.pos == prev_pacman and pacman.pos == prev_ghost:
                     pacman.death()
                     life_lost(stdscr, pacman.lives, score)
@@ -212,6 +219,9 @@ def game_loop(stdscr, lives):
 
         if pacman.on_ghost(ghosts):
             pacman.death()
+            if pacman.lives == 0:
+                if game_lost(stdscr, score):
+                    break
             life_lost(stdscr, pacman.lives, score)
             stdscr.erase()
             stdscr.refresh()
@@ -219,6 +229,17 @@ def game_loop(stdscr, lives):
 
         if key == ord('p'):
             break
+
+    return score.get_score
+
+
+def starting_multi_game(stdscr, player):
+    msg = f"Player {player}, please enter a key to start the game"
+    h, w = stdscr.getmaxyx()
+    x = w // 2 - len(msg) // 2
+    y = h // 2
+    stdscr.addstr(y, x, msg, curses.color_pair(4))
+    stdscr.getch()
 
 
 def menu_gamemode(stdscr, menu_obj):
@@ -247,7 +268,50 @@ def menu_gamemode(stdscr, menu_obj):
                 game_loop(stdscr, 3)
             elif gamemode_current_row == 7:
                 stdscr.clear()
-                break
+                player1 = "1"
+                player2 = "2"
+                starting_multi_game(stdscr, player1)
+                time1_start = time.time()
+                score1 = game_loop(stdscr, 1)
+                time1_end = time.time()
+                time1 = time1_end - time1_start
+
+                stdscr.clear()
+                starting_multi_game(stdscr, player2)
+                time2_start = time.time()
+                score2 = game_loop(stdscr, 1)
+                time2_end = time.time()
+                time2 = time2_end - time2_start
+
+                time_div = 0
+                if time1 > time2:
+                    time_div = time1
+                else:
+                    time_div = time2
+
+                score1 = int((score1 * 10) / time_div)
+                score2 = int((score2 * 10) / time_div)
+
+                if score1 > score2:
+                    win_msg = f"The winner is player {player1} with {score1} points, press any key to pass"
+                else:
+                    win_msg = f"The winner is player {player2} with {score1} points, press any key to pass"
+                stdscr.clear()
+                h, w = stdscr.getmaxyx()
+                x = w // 2 - len(win_msg) // 2
+                y = h // 2
+                stdscr.addstr(y, x, win_msg, curses.color_pair(1))
+                stdscr.getch()
+                stdscr.clear()
+                msg_score1 = f"Player {player1} : {score1} points"
+                msg_score2 = f"Player {player2} : {score2} points"
+                stdscr.addstr(y - 1, x, msg_score1, curses.color_pair(1))
+                stdscr.addstr(y + 1, x, msg_score2, curses.color_pair(1))
+                stdscr.addstr(y - 3, x, "press any key to leave", curses.color_pair(1))
+                stdscr.refresh()
+                stdscr.getch()
+                exit()
+
         menu_obj.menu_gamemode(stdscr, gamemode_current_row)
         stdscr.refresh()
 
@@ -310,6 +374,7 @@ def main(stdscr):
                 menu_exit(stdscr, menu_obj)
         menu_obj.print_menu(stdscr, current_row)
         stdscr.refresh()
+
 
 if __name__ == "__main__":
     curses.wrapper(main)
