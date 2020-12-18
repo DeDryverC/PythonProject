@@ -1,0 +1,80 @@
+<PacManScreenManager>:
+    MenuScreen:
+        id: menu_screen
+    GameModeScreen:
+    ExitScreen:
+
+
+<MenuScreen>:
+    name : '_menu_screen_'
+    GridLayout:
+        cols : 1
+        rows : 4
+        Button:
+            text: 'GameMode'
+            background_color: (0, 99, 71, 0.5)
+            on_press: root.manager.current = '_gamemode_screen_'
+        Button:
+            text: 'ScoreBoard'
+            background_color: (0, 99, 71, 0.5)
+            on_press: root.scoreboard()
+        Button:
+            text: 'Settings'
+            background_color: (0, 99, 71, 0.5)
+            on_press: root.settings()
+        Button:
+            text: 'Exit'
+            background_color: (0, 99, 71, 0.5)
+            on_press: root.manager.current = '_exit_screen_'
+
+<GameModeScreen>:
+    name: "_gamemode_screen_"
+    GridLayout:
+        cols : 1
+        rows : 2
+        Label:
+            text: "Choisissez le mode de jeu"
+        GridLayout:
+            cols : 5
+            rows : 1
+            Button:
+                text: 'Solo'
+                background_color: (0, 99, 71, 0.5)
+                on_press: print("coucou")
+            Label:
+                text :" "
+            Button:
+                text: 'Duo'
+                background_color: (0, 99, 71, 0.5)
+                on_press: print("coucou duo")
+            Label:
+                text :" "
+            Button:
+                text: 'Retour'
+                background_color: (0, 99, 71, 0.5)
+                on_press: root.manager.current = '_menu_screen_'
+
+<ExitScreen>:
+    name: "_exit_screen_"
+    GridLayout:
+        rows : 2
+        cols : 1
+        Label:
+            text: "Etes vous cerrtain de vouloir quitter ?"
+        GridLayout:
+            cols: 3
+            rows: 1
+            Button:
+                text: 'Oui'
+                background_color: (0, 99, 71, 0.5)
+                on_press: root.manager.current = exit()
+            Label:
+                text: ''
+            Button:
+                text: 'Non'
+                background_color: (0, 99, 71, 0.5)
+                on_press: root.manager.current = '_menu_screen_'
+
+
+
+
