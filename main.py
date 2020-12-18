@@ -19,15 +19,17 @@ from PythonProject.Module_PacDuel.MovingEntities import Pacman, Ghost
 from PythonProject.Module_PacDuel.ScoreCount import ScoreCount
 from PythonProject.Module_PacDuel.MenuGen import Menu
 
-"""
-Ecrit par Cedric de Dryver le 09 novembre 2020
-Déplacé dans une fonction par Andréas le 10 novembre 2020
-Description: initialisation de la fenetre avec curses ainsi que l'initialisation 
-des paires de couleur
-"""
+
 
 
 def init_win(stdscr):
+    """
+    Ecrit par Cedric de Dryver le 09 novembre 2020
+    Déplacé dans une fonction par Andréas le 10 novembre 2020
+    Description: initialisation de la fenetre avec curses ainsi que l'initialisation
+    des paires de couleur
+    """
+
     curses.curs_set(0)
     curses.noecho()
     curses.cbreak()
@@ -51,14 +53,15 @@ def init_win(stdscr):
         stdscr.refresh()
 
 
-"""
-    Ecrit par Cedric de Dryver le 09 novembre 2020
-    Déplacé dans une fonction par Andréas le 10 novembre 2020
-    Description: Affichage de fin de partie
-"""
+
 
 
 def game_won(stdscr, score):
+    """
+        Ecrit par Cedric de Dryver le 09 novembre 2020
+        Déplacé dans une fonction par Andréas le 10 novembre 2020
+        Description: Affichage de fin de partie
+    """
     stdscr.erase()
     gg = "You won ! Congratz"
     endmessage = "Press Q to quit the game"
@@ -88,16 +91,19 @@ def game_lost(stdscr, score):
         return True
 
 
-""" Main function
-Auth: Cédric De Dryver, November 09 2020 - 17h27
-Modified by Andréas Bombaert, November 10 2020 - 17h
-All lines have a step-by-step description in French.
-But this main function allows you to play the simplified pac man game. the keys are Z: up, S: down, Q: left, D: right.
-It's better with an AZERTY keyboard.
-"""
+
 
 
 def game_loop(stdscr, lives):
+    """
+    Auth: Cédric De Dryver, November 09 2020 - 17h27
+    Modified by Andréas Bombaert, November 10 2020 - 17h
+    All lines have a step-by-step description in French.
+    But this main function allows you to play the simplified pac man game. the keys are Z: up, S: down, Q: left, D: right.
+    It's better with an AZERTY keyboard.
+    """
+
+
     # Position du PacMan et sa position initiale.
     pacman = Pacman(lives)
     pacman.setpos(16, 11)
@@ -120,13 +126,13 @@ def game_loop(stdscr, lives):
     count_coll = game_map.collectibles
 
     '''
-    Voici la boucle du jeu,
-    pour quitter cette boucle, appuyez sur "p" ou ramassez tout les collectibles
-    touches de mouvement:
-    Z : Haut
-    S : Bas
-    Q : Gauche
-    D : Droite
+        Voici la boucle du jeu,
+        pour quitter cette boucle, appuyez sur "p" ou ramassez tout les collectibles
+        touches de mouvement:
+        Z : Haut
+        S : Bas
+        Q : Gauche
+        D : Droite
     '''
 
     while True:
@@ -169,19 +175,20 @@ def game_loop(stdscr, lives):
             break
 
 
-"""
-auth: C. De Dryver
-    Cette fonction est utilisé pour creer un menu gamemode, et l'utilisateur peut choisir l'un des choix qui s'offre a lui
-    en naviguant d'une réponse a l'autre.
 
-    PRE: (curses) stdscr : Interface console sur laquelle on travaille
-         (Menu) menu_obj : Classe local qui nous permet de creer un menu
-         
-    POST: Creer un choix entre le mode solo ou le mode duo. Solo / Duo
-"""
 
 
 def menu_gamemode(stdscr, menu_obj):
+    """
+        auth: C. De Dryver
+        Cette fonction est utilisé pour creer un menu gamemode, et l'utilisateur peut choisir l'un des choix qui s'offre a lui
+        en naviguant d'une réponse a l'autre.
+
+        PRE: (curses) stdscr : Interface console sur laquelle on travaille
+             (Menu) menu_obj : Classe local qui nous permet de creer un menu
+
+        POST: Creer un choix entre le mode solo ou le mode duo. Solo / Duo
+    """
     gamemode_current_row = 6
     menu_obj.menu_gamemode(stdscr, gamemode_current_row)
     while True:
@@ -201,19 +208,20 @@ def menu_gamemode(stdscr, menu_obj):
         stdscr.refresh()
 
 
-"""
-auth: C. De Dryver
-    Cette fonction est utilisé pour creer un menu exit, et l'utilisateur peut choisir l'un des choix qui s'offre a lui
-    en naviguant d'une réponse a l'autre.
 
-    PRE: (curses) stdscr : Interface console sur laquelle on travaille
-         (Menu) menu_obj : Classe local qui nous permet de creer un menu
-         
-    POST: Creer un choix pour quitter l'application. Yes / No
-"""
 
 
 def menu_exit(stdscr, menu_obj):
+    """
+        auth: C. De Dryver
+        Cette fonction est utilisé pour creer un menu exit, et l'utilisateur peut choisir l'un des choix qui s'offre a lui
+        en naviguant d'une réponse a l'autre.
+
+        PRE: (curses) stdscr : Interface console sur laquelle on travaille
+             (Menu) menu_obj : Classe local qui nous permet de creer un menu
+
+        POST: Creer un choix pour quitter l'application. Yes / No
+    """
     leave_current_row = 4
     menu_obj.menu_leave(stdscr, leave_current_row)
     while True:
@@ -232,16 +240,17 @@ def menu_exit(stdscr, menu_obj):
         stdscr.refresh()
 
 
-"""
-auth: C. De Dryver
-    Ce main va creer un menu de base, ou l'on va choisir ce que l'on peut faire, Le scoreboard et les settings ne sont
-    pas encore implémentée.
-    
-    PRE: (curses) stdscr: interface console sur laquelle on affiche tout.
-"""
+
 
 
 def main(stdscr):
+    """
+        auth: C. De Dryver
+        Ce main va creer un menu de base, ou l'on va choisir ce que l'on peut faire, Le scoreboard et les settings ne sont
+        pas encore implémentée.
+
+        PRE: (curses) stdscr: interface console sur laquelle on affiche tout.
+    """
     # Initialisation de la library curse:
     init_win(stdscr)
     menu_obj = Menu(5)

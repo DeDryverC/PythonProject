@@ -34,45 +34,48 @@ class Pacman(MovingEntities):
     def lives(self):
         return self.__lives
 
-    """
-    PRE : none
-    POST : Pacman.pos now equals pos_x, pos_y
-    RAISES : ValueError if pos_x or pos_y is under 0
-    """
+
 
     def setpos(self, pos_x, pos_y):
+        """
+            PRE : none
+            POST : Pacman.pos now equals pos_x, pos_y
+            RAISES : ValueError if pos_x or pos_y is under 0
+        """
         if pos_x < 0 or pos_y < 0:
             raise ValueError("position can't be under 0")
         self.__pos = [pos_x, pos_y]
 
-    """
-    PRE : none
-    POST : Pacman.lives decrease from 1 life
-    RAISES : none
-    """
 
     def death(self):
+        """
+            PRE : none
+            POST : Pacman.lives decrease from 1 life
+            RAISES : none
+        """
         self.__lives -= 1
 
-    """
-    PRE : There can be multiple args but they must be ghosts
-    POST : return a boolean that contains if the pacman is on the same position than a ghost or not
-    RAISES : 
-    """
+
 
     def on_ghost(self, *args):
+        """
+            PRE : There can be multiple args but they must be ghosts
+            POST : return a boolean that contains if the pacman is on the same position than a ghost or not
+            RAISES :
+        """
         for x in args:
             if self.pos == x.pos:
                 return True
         return False
 
-    """
-    PRE : game_map must not be empty
-    POST : returns the updated args
-    RAISES : ValueError if map is empty
-    """
+
 
     def moves(self, key, game_map, score, count_coll):
+        """
+            PRE : game_map must not be empty
+            POST : returns the updated args
+            RAISES : ValueError if map is empty
+        """
         if not game_map:
             raise ValueError("game map mustn't be empty")
         if key == ord('z'):
@@ -141,14 +144,15 @@ class Pacman(MovingEntities):
         return key, game_map, score, count_coll
 
 
-"""
-    Author: Andreas Bombaert
-    Date: 6/12/2020
-    Ghosts class, this class contains all the necessary methods for the game to make the ghost move +- randomly through the map
-    """
+
 
 
 class Ghost(MovingEntities):
+    """
+        Author: Andreas Bombaert
+        Date: 6/12/2020
+        Ghosts class, this class contains all the necessary methods for the game to make the ghost move +- randomly through the map
+    """
     def __init__(self, color):
         super().__init__([])
         self.__color = color
@@ -166,13 +170,14 @@ class Ghost(MovingEntities):
     def color(self):
         return self.__color
 
-    """
-        PRE : none
-        POST : Ghost pos is a random position, except the pacman position and a wall position
-        RAISES : none
-        """
+
 
     def set_init_pos(self, game_map):
+        """
+                PRE : none
+                POST : Ghost pos is a random position, except the pacman position and a wall position
+                RAISES : none
+        """
         self.__pos = [random.randint(1, 8), random.randint(1, 18)]
         while game_map[self.__pos[0]][self.__pos[1]] == "#" or game_map[self.__pos[0]][self.__pos[1]] == "o":
             self.__pos = [random.randint(1, 8), random.randint(1, 18)]
@@ -180,14 +185,15 @@ class Ghost(MovingEntities):
         game_map[self.__pos[0]][self.__pos[1]] = self
         return game_map
 
-    """
-        PRE : game map mustn't be empty
-        POST : returns the updated game map
-        RAISES : TypeError if an argument is not a Ghost
-        """
 
     # for direction 1: forward, 2: left, 3: backward, 4: right
     def moves(self, game_map, direction):
+        """
+            PRE : game map mustn't be empty
+            POST : returns the updated game map
+            RAISES : TypeError if an argument is not a Ghost
+        """
+
         if not game_map:
             raise ValueError("Game map mustn't be empty")
 

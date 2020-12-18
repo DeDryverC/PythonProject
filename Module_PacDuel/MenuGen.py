@@ -1,24 +1,26 @@
 import curses
 
-"""
-Class : Menu
-Author : C. De Dryver
-Cette classe permet d'afficher un menu ou l'on peut choisir le mode que l'on veut, c'est a dire on a le choix du
-gamemode (solo ou duo), le choix de voir la page des score (TODO), gerer les paramètre grace aux settings, ou quitter
-l'application avec Exit
-"""
+
 
 
 class Menu:
     """
-    On va creer le menu et toute les variables qui vont avec
-    PRE : start_row (int) : Determine la ou va commencer le choix (en dessous du logo)
-    POST: Va creer les variables globales pour le menu pacman.
-
-    RAISE: ValueError : start_row doit etre un int.
+        Class : Menu
+        Author : C. De Dryver
+        Cette classe permet d'afficher un menu ou l'on peut choisir le mode que l'on veut, c'est a dire on a le choix du
+        gamemode (solo ou duo), le choix de voir la page des score (TODO), gerer les paramètre grace aux settings, ou quitter
+        l'application avec Exit
     """
 
+
     def __init__(self, start_row):
+        """
+            On va creer le menu et toute les variables qui vont avec
+            PRE : start_row (int) : Determine la ou va commencer le choix (en dessous du logo)
+            POST: Va creer les variables globales pour le menu pacman.
+
+            RAISE: ValueError : start_row doit etre un int.
+        """
         if isinstance(start_row, type(int)):
             raise TypeError
 
@@ -41,24 +43,25 @@ class Menu:
     def current_row(self):
         return self.__current_row
 
-    """
-    Cette méthode va permettre d'afficher dans une interface console, le logo pac man et un menu ou l'on va
-    choisir l'action (le menu qu'on choisit a un fond gris-blanc sur des lettre en noir.
-    
-    PRE:    stdscr (curses)  : Importation du screen (fenetre) curse avec les paramètres définit dans main.
-            selected_row_idx (int) : Permet de savoir a quel index se situe l'utilisateur dans son choix dans le menu.
-            
-    POST:   Grace au stdscr qu'on importe, tout les changement seront directement appliquée a celui ci, on ne retourne
-                rien et de plus, les changement qu'on a fait apparaiterons dans la fenètre grace au stdscr.refresh()
-                Mais cette methode va creer un menu pacman.
-    
-    RAISE: TypeError : selected_row_idx doit etre un int.
-    """
+
 
     def print_menu(self, stdscr, selected_row_idx):
+        """
+            Cette méthode va permettre d'afficher dans une interface console, le logo pac man et un menu ou l'on va
+            choisir l'action (le menu qu'on choisit a un fond gris-blanc sur des lettre en noir.
+
+            PRE:    stdscr (curses)  : Importation du screen (fenetre) curse avec les paramètres définit dans main.
+                    selected_row_idx (int) : Permet de savoir a quel index se situe l'utilisateur dans son choix dans le menu.
+
+            POST:   Grace au stdscr qu'on importe, tout les changement seront directement appliquée a celui ci, on ne retourne
+                        rien et de plus, les changement qu'on a fait apparaiterons dans la fenètre grace au stdscr.refresh()
+                        Mais cette methode va creer un menu pacman.
+
+            RAISE: TypeError : selected_row_idx doit etre un int.
+        """
 
         if isinstance(selected_row_idx, type(int)):
-            raise TypeError
+            raise TypeError('selected_row_idx must be an int')
 
         h, w = self.__print_logo(stdscr)
 
@@ -74,23 +77,23 @@ class Menu:
 
         stdscr.refresh()
 
-    """
-    Cette méthode permet de re-créer un menu, ou les choix disponible sont yes-no pour verifier que l'utilisateur veut
-    quitter l'application, si il choisit oui, la fenètre se ferme, le code s'arrète. Si il choisit non, il reviendra 
-    sur le menu précédent.
-    
-    PRE:    stdscr (curses)  : Importation du screen (fenetre) curse avec les paramètres définit dans main.
-            selected_row_idx (int) : Permet de savoir a quel index se situe l'utilisateur dans son choix dans le menu.
-            
-    POST: Va creer une verification pour quitter l'application dans l'interface stdscr.
-    
-    RAISE: TypeError : selected_row_idx doit etre un int.
-    """
+
 
     def menu_leave(self, stdscr, selected_row_idx):
+        """
+            Cette méthode permet de re-créer un menu, ou les choix disponible sont yes-no pour verifier que l'utilisateur veut
+            quitter l'application, si il choisit oui, la fenètre se ferme, le code s'arrète. Si il choisit non, il reviendra
+            sur le menu précédent.
 
+            PRE:    stdscr (curses)  : Importation du screen (fenetre) curse avec les paramètres définit dans main.
+                    selected_row_idx (int) : Permet de savoir a quel index se situe l'utilisateur dans son choix dans le menu.
+
+            POST: Va creer une verification pour quitter l'application dans l'interface stdscr.
+
+            RAISE: TypeError : selected_row_idx doit etre un int.
+        """
         if isinstance(selected_row_idx, type(int)):
-            raise TypeError
+            raise TypeError('selected_row_idx must be an int')
 
         stdscr.clear()
         h, w = stdscr.getmaxyx()
@@ -108,22 +111,22 @@ class Menu:
                 stdscr.addstr(y, x, row)
         stdscr.refresh()
 
-    """
-    Cette méthode va creer un mini-menu lorsque l'utilisateur a choisit Gamemode, il va pouvoir choisir le mode Solo
-    ou le mode Duel ( Duel n'est pas encore implémenté donc ça retournera au menu de base.
-    
-    PRE:    stdscr (curses)  : Importation du screen (fenetre) curse avec les paramètres définit dans main.
-            selected_row_idx (int) : Permet de savoir a quel index se situe l'utilisateur dans son choix dans le menu.
-            
-    POST: Va creer un choix entre le mode solo ou le mode Duo dans l'interface stdscr
-    
-    RAISE: TypeError : selected_row_idx doit etre un int.
-    """
+
 
     def menu_gamemode(self, stdscr, selected_row_idx):
+        """
+            Cette méthode va creer un mini-menu lorsque l'utilisateur a choisit Gamemode, il va pouvoir choisir le mode Solo
+            ou le mode Duel ( Duel n'est pas encore implémenté donc ça retournera au menu de base.
 
+            PRE:    stdscr (curses)  : Importation du screen (fenetre) curse avec les paramètres définit dans main.
+                    selected_row_idx (int) : Permet de savoir a quel index se situe l'utilisateur dans son choix dans le menu.
+
+            POST: Va creer un choix entre le mode solo ou le mode Duo dans l'interface stdscr
+
+            RAISE: TypeError : selected_row_idx doit etre un int.
+        """
         if isinstance(selected_row_idx, type(int)):
-            raise TypeError
+            raise TypeError('selected_row_idx must be an int')
 
         stdscr.clear()
         h, w = self.__print_logo(stdscr)
@@ -145,18 +148,19 @@ class Menu:
                 x = w // 2 + 2
                 stdscr.addstr(y + 1, x, self.__gamemode_menu[1])
 
-    """
-    Methode privée, car on va re-creer plusieurs fois le logo dans les differents menu, alors pour éviter des doublons
-    de code inutiles, voici une fonction qui va creer le logo pacman.
-    
-    PRE: stdscr (curses)  : Importation du screen (fenetre) curse avec les paramètres définit dans main.
-    
-    POST:   va créer un logo sur l'interface stdscr
-            (int) h : hauteur de la fenètre stdscr.
-            (int) w : largeur de la fenetre stdscr
-    """
 
     def __print_logo(self, stdscr):
+        """
+            Methode privée, car on va re-creer plusieurs fois le logo dans les differents menu, alors pour éviter des doublons
+            de code inutiles, voici une fonction qui va creer le logo pacman.
+
+            PRE: stdscr (curses)  : Importation du screen (fenetre) curse avec les paramètres définit dans main.
+
+            POST:   va créer un logo sur l'interface stdscr
+                    (int) h : hauteur de la fenètre stdscr.
+                    (int) w : largeur de la fenetre stdscr
+        """
+
         h, w = stdscr.getmaxyx()
         for idx, row in enumerate(self.__logo):
             x = w // 2 - len(row) // 2

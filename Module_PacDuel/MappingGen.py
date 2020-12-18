@@ -17,17 +17,18 @@ class Map:
     def collectibles(self):
         return self.__collectibles
 
-    """
-        Auth: Andréas Bombaert
-        Last date: November 10 2020 - 17h07
-        La fonction traduit le fichier en liste contenant la carte
-        PRE (file) : Un fichier contenant une représentation textuelle de la carte de jeu
-            (array) : Un array de coordonnées contenant la position du joueur (PacMan)
-        POST (none) : utilise la librairie curses pour afficher la carte dans la console
-        RAISES : FileNotFoundError et IOError
-    """
 
     def gen_map(self):
+        """
+                Auth: Andréas Bombaert
+                Last date: November 10 2020 - 17h07
+                La fonction traduit le fichier en liste contenant la carte
+                PRE (file) : Un fichier contenant une représentation textuelle de la carte de jeu
+                    (array) : Un array de coordonnées contenant la position du joueur (PacMan)
+                POST (none) : utilise la librairie curses pour afficher la carte dans la console
+                RAISES : FileNotFoundError et IOError
+            """
+
         try:
             with open(self.file) as file:
                 for line in file:
@@ -41,17 +42,16 @@ class Map:
         except IOError:
             print('Erreur IO.')
 
-    """
-        Auth: Andréas Bombaert
-        Last date: November 10 2020 - 17h05
-        La fonction affiche en console la carte contenue dans un array
-        PRE (array) : Une représentation de la carte en 2d sous forme de liste de listes
-        POST (none) : utilise la librairie curses pour afficher la carte dans la console
-        RAISES curses.error : si erreur lors de l'appel de fonctions curses
-    """
-
     # affiche la map sur l'écran
     def cast_map(self, map_ar, stdscr):
+
+        """
+            Auth: Andréas Bombaert
+            Last date: November 10 2020 - 17h05
+            La fonction affiche en console la carte contenue dans un array
+            PRE (array) : Une représentation de la carte en 2d sous forme de liste de listes
+            POST (none) : utilise la librairie curses pour afficher la carte dans la console
+        """
         stdscr.clear()
 
         h, w= stdscr.getmaxyx()
