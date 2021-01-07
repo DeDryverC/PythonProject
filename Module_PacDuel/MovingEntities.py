@@ -23,6 +23,7 @@ class Pacman(MovingEntities):
         super().__init__([])
         self.__lives = lives
         self.__pos = [0, 0]
+        self.__eaten = []
 
     @property
     def pos(self):
@@ -32,6 +33,10 @@ class Pacman(MovingEntities):
     def lives(self):
         return self.__lives
 
+    @property
+    def eaten(self):
+        return self.__eaten
+
     """
     PRE : none
     POST : Pacman.pos now equals pos_x, pos_y
@@ -39,6 +44,9 @@ class Pacman(MovingEntities):
     """
     def setpos(self, pos_x, pos_y):
         self.__pos = [pos_x, pos_y]
+
+    def set_eaten(self, game_array):
+        self.__eaten = game_array.copy()
 
     """
     PRE : none
@@ -86,10 +94,13 @@ class Pacman(MovingEntities):
                     count_coll -= 1
                 if game_map[self.__pos[0] - 1][self.__pos[1]] == ".":
                     score.add_score(100)
+                    self.__eaten[self.__pos[0] - 1][self.__pos[1]] = " "
                 if game_map[self.__pos[0]][self.__pos[1] - 1] == "x":
                     score.add_score(200)
+                    self.__eaten[self.__pos[0] - 1][self.__pos[1]] = " "
                 if game_map[self.__pos[0] - 1][self.__pos[1]] == "^":
                     score.add_score(500)
+                    self.__eaten[self.__pos[0] - 1][self.__pos[1]] = " "
                 game_map[self.__pos[0] - 1][self.__pos[1]] = "o"
                 game_map[self.__pos[0]][self.__pos[1]] = " "
                 self.__pos[0] -= 1
@@ -101,10 +112,13 @@ class Pacman(MovingEntities):
                     count_coll -= 1
                 if game_map[self.__pos[0]][self.__pos[1] - 1] == ".":
                     score.add_score(100)
+                    self.__eaten[self.__pos[0]][self.__pos[1] - 1] = " "
                 if game_map[self.__pos[0]][self.__pos[1] - 1] == "x":
                     score.add_score(200)
+                    self.__eaten[self.__pos[0]][self.__pos[1] - 1] = " "
                 if game_map[self.__pos[0]][self.__pos[1] - 1] == "^":
                     score.add_score(500)
+                    self.__eaten[self.__pos[0]][self.__pos[1] - 1] = " "
                 game_map[self.__pos[0]][self.__pos[1] - 1] = "o"
                 game_map[self.__pos[0]][self.__pos[1]] = " "
                 self.__pos[1] -= 1
@@ -117,10 +131,13 @@ class Pacman(MovingEntities):
                     count_coll -= 1
                 if game_map[self.__pos[0] + 1][self.__pos[1]] == ".":
                     score.add_score(100)
+                    self.__eaten[self.__pos[0] + 1][self.__pos[1]] = " "
                 if game_map[self.__pos[0] + 1][self.__pos[1]] == "x":
                     score.add_score(200)
+                    self.__eaten[self.__pos[0] + 1][self.__pos[1]] = " "
                 if game_map[self.__pos[0] + 1][self.__pos[1]] == "^":
                     score.add_score(500)
+                    self.__eaten[self.__pos[0] + 1][self.__pos[1]] = " "
                 game_map[self.__pos[0] + 1][self.__pos[1]] = "o"
                 game_map[self.__pos[0]][self.__pos[1]] = " "
                 self.__pos[0] += 1
@@ -133,10 +150,13 @@ class Pacman(MovingEntities):
                     count_coll -= 1
                 if game_map[self.__pos[0]][self.__pos[1] + 1] == ".":
                     score.add_score(100)
+                    self.__eaten[self.__pos[0]][self.__pos[1] + 1] = " "
                 if game_map[self.__pos[0]][self.__pos[1] + 1] == "x":
                     score.add_score(200)
+                    self.__eaten[self.__pos[0]][self.__pos[1] + 1] = " "
                 if game_map[self.__pos[0]][self.__pos[1] + 1] == "^":
                     score.add_score(500)
+                    self.__eaten[self.__pos[0]][self.__pos[1] + 1] = " "
                 game_map[self.__pos[0]][self.__pos[1] + 1] = "o"
                 game_map[self.__pos[0]][self.__pos[1]] = " "
                 self.__pos[1] += 1
@@ -176,11 +196,11 @@ class Ghost(MovingEntities):
     POST : Ghost pos is a random position, except the pacman position and a wall position
     RAISES : none
     """
-    def set_init_pos(self, game_map):
+    def set_init_pos(self, game_map, pacman):
         self.__pos = [random.randint(1, 8), random.randint(1, 18)]
         while game_map[self.__pos[0]][self.__pos[1]] == "#" or game_map[self.__pos[0]][self.__pos[1]] == "o":
             self.__pos = [random.randint(1, 8), random.randint(1, 18)]
-        self.__prev = game_map[self.__pos[0]][self.__pos[1]]
+        self.__prev = pacman.eaten[self.__pos[0]][self.__pos[1]]
         game_map[self.__pos[0]][self.__pos[1]] = self
         return game_map
 
@@ -189,7 +209,7 @@ class Ghost(MovingEntities):
     POST : returns the updated game map
     RAISES : TypeError if an argument is not a Ghost
     """
-    def moves(self, game_map, direction, flag):
+    def moves(self, game_map, direction, flag, pacman):
         # direction 1: upward, 2: left, 3: downward, 4: right
         # flag indicates if the ghost must move again or not, this avoids the ghost to moves twice in a function call
         if flag == 0:
@@ -197,14 +217,10 @@ class Ghost(MovingEntities):
         if direction == 1:
             if game_map[self.__pos[0] - 1][self.__pos[1]] == "#":
                 direction = random.randint(2, 4)
-                self.moves(game_map, direction, 0)
+                self.moves(game_map, direction, 0, pacman)
             else:
-                if not game_map[self.__pos[0]][self.__pos[1]] == "o":
-                    game_map[self.__pos[0]][self.__pos[1]] = self.__prev
-                if game_map[self.__pos[0] - 1][self.__pos[1]] == "M":
-                    pass
-                else:
-                    self.__prev = game_map[self.__pos[0] - 1][self.__pos[1]]
+                game_map[self.__pos[0]][self.__pos[1]] = self.__prev
+                self.__prev = pacman.eaten[self.__pos[0] - 1][self.__pos[1]]
                 game_map[self.__pos[0] - 1][self.__pos[1]] = self
 
                 self.__pos[0] -= 1
@@ -214,14 +230,10 @@ class Ghost(MovingEntities):
                 direction = random.randint(1, 4)
                 while direction == 2:
                     direction = random.randint(1, 4)
-                self.moves(game_map, direction, 0)
+                self.moves(game_map, direction, 0, pacman)
             else:
-                if not game_map[self.__pos[0]][self.__pos[1]] == "o":
-                    game_map[self.__pos[0]][self.__pos[1]] = self.__prev
-                if game_map[self.__pos[0]][self.__pos[1] - 1] == "M":
-                    pass
-                else:
-                    self.__prev = game_map[self.__pos[0]][self.__pos[1] - 1]
+                game_map[self.__pos[0]][self.__pos[1]] = self.__prev
+                self.__prev = pacman.eaten[self.__pos[0]][self.__pos[1] - 1]
                 game_map[self.__pos[0]][self.__pos[1] - 1] = self
 
                 self.__pos[1] -= 1
@@ -231,14 +243,10 @@ class Ghost(MovingEntities):
                 direction = random.randint(1, 4)
                 while direction == 3:
                     direction = random.randint(1, 4)
-                self.moves(game_map, direction, 0)
+                self.moves(game_map, direction, 0, pacman)
             else:
-                if not game_map[self.__pos[0]][self.__pos[1]] == "o":
-                    game_map[self.__pos[0]][self.__pos[1]] = self.__prev
-                if game_map[self.__pos[0] + 1][self.__pos[1]] == "M":
-                    pass
-                else:
-                    self.__prev = game_map[self.__pos[0] + 1][self.__pos[1]]
+                game_map[self.__pos[0]][self.__pos[1]] = self.__prev
+                self.__prev = pacman.eaten[self.__pos[0] + 1][self.__pos[1]]
                 game_map[self.__pos[0] + 1][self.__pos[1]] = self
 
                 self.__pos[0] += 1
@@ -246,14 +254,10 @@ class Ghost(MovingEntities):
         if direction == 4:
             if game_map[self.__pos[0]][self.__pos[1] + 1] == "#":
                 direction = random.randint(1, 3)
-                self.moves(game_map, direction, 0)
+                self.moves(game_map, direction, 0, pacman)
             else:
-                if not game_map[self.__pos[0]][self.__pos[1]] == "o":
-                    game_map[self.__pos[0]][self.__pos[1]] = self.__prev
-                if game_map[self.__pos[0]][self.__pos[1] + 1] == "M":
-                    pass
-                else:
-                    self.__prev = game_map[self.__pos[0]][self.__pos[1] + 1]
+                game_map[self.__pos[0]][self.__pos[1]] = self.__prev
+                self.__prev = pacman.eaten[self.__pos[0]][self.__pos[1] + 1]
                 game_map[self.__pos[0]][self.__pos[1] + 1] = self
 
                 self.__pos[1] += 1

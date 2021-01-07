@@ -134,6 +134,8 @@ def game_loop(stdscr, lives):
     game_map.gen_map()
     map_ar = game_map.map_ar
 
+    pacman.set_eaten(map_ar)
+
     # Position du/des fantomes et leur(s) position initiale
     ghosts = []
     ghost1 = Ghost(curses.color_pair(2))
@@ -144,10 +146,10 @@ def game_loop(stdscr, lives):
     ghosts.append(ghost2)
     ghosts.append(ghost3)
     ghosts.append(ghost4)
-    map_ar = ghost1.set_init_pos(map_ar)
-    map_ar = ghost2.set_init_pos(map_ar)
-    map_ar = ghost3.set_init_pos(map_ar)
-    map_ar = ghost4.set_init_pos(map_ar)
+    map_ar = ghost1.set_init_pos(map_ar, pacman)
+    map_ar = ghost2.set_init_pos(map_ar, pacman)
+    map_ar = ghost3.set_init_pos(map_ar, pacman)
+    map_ar = ghost4.set_init_pos(map_ar, pacman)
     # Initialisation du Terrain curses
     game_map.cast_map(map_ar, stdscr)
 
@@ -205,7 +207,7 @@ def game_loop(stdscr, lives):
             for x in ghosts:
                 # direction 1: forward, 2: left, 3: backward, 4: right
                 prev_ghost = x.pos.copy()
-                map_ar = x.moves(map_ar, direction, 1)  # every ghost moves
+                map_ar = x.moves(map_ar, direction, 1, pacman)  # every ghost moves
                 if x.pos == prev_pacman and pacman.pos == prev_ghost:
                     pacman.death()
                     life_lost(stdscr, pacman.lives, score)
