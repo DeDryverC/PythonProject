@@ -1,3 +1,4 @@
+
 import random
 
 
@@ -7,6 +8,7 @@ class MovingEntities:
     Date: 6/12/2020
     Mother class of Pacman and Ghost classes, this class represents any moving entity on the map
     """
+
     def __init__(self, map_ar):
         self.__pos = [0, 0]
         self.state = 1  # 0: dead, 1: alive
@@ -19,11 +21,13 @@ class Pacman(MovingEntities):
     Date: 6/12/2020
     Pacman class, this class contains all the necessary methods for the game to make pacman move through the map
     """
+
     def __init__(self, lives):
         super().__init__([])
         self.__lives = lives
         self.__pos = [0, 0]
         self.__eaten = []
+
 
     @property
     def pos(self):
@@ -32,6 +36,7 @@ class Pacman(MovingEntities):
     @property
     def lives(self):
         return self.__lives
+
 
     @property
     def eaten(self):
@@ -164,11 +169,15 @@ class Pacman(MovingEntities):
         return key, game_map, score, count_coll
 
 
+
+
+
 class Ghost(MovingEntities):
     """
     Author: Andreas Bombaert
     Date: 6/12/2020
     Ghosts class, this class contains all the necessary methods for the game to make the ghost move +- randomly through the map
+
     """
     def __init__(self, color):
         super().__init__([])
@@ -186,6 +195,7 @@ class Ghost(MovingEntities):
     @property
     def color(self):
         return self.__color
+
 
     def setpos(self, pos_x, pos_y):
         """ This method is only here for tests"""
@@ -221,6 +231,7 @@ class Ghost(MovingEntities):
             else:
                 game_map[self.__pos[0]][self.__pos[1]] = self.__prev
                 self.__prev = pacman.eaten[self.__pos[0] - 1][self.__pos[1]]
+
                 game_map[self.__pos[0] - 1][self.__pos[1]] = self
 
                 self.__pos[0] -= 1
@@ -230,10 +241,12 @@ class Ghost(MovingEntities):
                 direction = random.randint(1, 4)
                 while direction == 2:
                     direction = random.randint(1, 4)
+
                 self.moves(game_map, direction, 0, pacman)
             else:
                 game_map[self.__pos[0]][self.__pos[1]] = self.__prev
                 self.__prev = pacman.eaten[self.__pos[0]][self.__pos[1] - 1]
+
                 game_map[self.__pos[0]][self.__pos[1] - 1] = self
 
                 self.__pos[1] -= 1
@@ -243,10 +256,12 @@ class Ghost(MovingEntities):
                 direction = random.randint(1, 4)
                 while direction == 3:
                     direction = random.randint(1, 4)
+
                 self.moves(game_map, direction, 0, pacman)
             else:
                 game_map[self.__pos[0]][self.__pos[1]] = self.__prev
                 self.__prev = pacman.eaten[self.__pos[0] + 1][self.__pos[1]]
+
                 game_map[self.__pos[0] + 1][self.__pos[1]] = self
 
                 self.__pos[0] += 1
@@ -254,10 +269,12 @@ class Ghost(MovingEntities):
         if direction == 4:
             if game_map[self.__pos[0]][self.__pos[1] + 1] == "#":
                 direction = random.randint(1, 3)
+
                 self.moves(game_map, direction, 0, pacman)
             else:
                 game_map[self.__pos[0]][self.__pos[1]] = self.__prev
                 self.__prev = pacman.eaten[self.__pos[0]][self.__pos[1] + 1]
+
                 game_map[self.__pos[0]][self.__pos[1] + 1] = self
 
                 self.__pos[1] += 1

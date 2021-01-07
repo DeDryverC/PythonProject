@@ -14,10 +14,12 @@ import random
 import time
 
 
+
 from Projet.PythonProject.Module_PacDuel.MappingGen import Map
 from Projet.PythonProject.Module_PacDuel.MovingEntities import Pacman, Ghost
 from Projet.PythonProject.Module_PacDuel.ScoreCount import ScoreCount
 from Projet.PythonProject.Module_PacDuel.MenuGen import Menu
+
 
 
 def init_win(stdscr):
@@ -44,12 +46,12 @@ def init_win(stdscr):
     y, x = stdscr.getmaxyx()
     resize = curses.is_term_resized(y, x)
 
+
     # Resize si c'est trop petit
     if resize is True:
         stdscr.clear()
         curses.resizeterm(30, 25)
         stdscr.refresh()
-
 
 def game_won(stdscr, score):
     """
@@ -57,7 +59,6 @@ def game_won(stdscr, score):
         Déplacé dans une fonction par Andréas le 10 novembre 2020
         Description: Affichage de fin de partie
     """
-
     stdscr.erase()
     gg = "You won ! Congratz"
     endmessage = "Press Q to quit the game"
@@ -72,6 +73,7 @@ def game_won(stdscr, score):
         return True
 
 
+
 def life_lost(stdscr, lives, score):
     stdscr.erase()
     msg = ""
@@ -83,12 +85,24 @@ def life_lost(stdscr, lives, score):
         game_lost(stdscr, score)
     nxt = "Press any key to go to next life"
 
+
     stdscr.addstr(1, 1, msg, curses.color_pair(3))
     stdscr.addstr(3, 1, nxt, curses.color_pair(3))
     stdscr.refresh()
 
+
     key = stdscr.getch()
     return True
+
+
+def game_loop(stdscr, lives):
+    """
+    Auth: Cédric De Dryver, November 09 2020 - 17h27
+    Modified by Andréas Bombaert, November 10 2020 - 17h
+    All lines have a step-by-step description in French.
+    But this main function allows you to play the simplified pac man game. the keys are Z: up, S: down, Q: left, D: right.
+    It's better with an AZERTY keyboard.
+    """
 
 
 def game_lost(stdscr, score):
@@ -129,10 +143,12 @@ def game_loop(stdscr, lives):
     pacman = Pacman(lives)
     pacman.setpos(4, 9)
 
+
     # Initialisation de la carte
     game_map = Map("data/map1.txt", pacman.pos[0], pacman.pos[1])
     game_map.gen_map()
     map_ar = game_map.map_ar
+
 
     pacman.set_eaten(map_ar)
 
@@ -172,12 +188,15 @@ def game_loop(stdscr, lives):
             D : Droite
         """
         if pacman.lives <= 0:
+
             if game_lost(stdscr, score):
                 break
 
         stdscr.addstr(1, 22, "Score: ", curses.color_pair(3))  # Refreshing du score a chaque mouvement.
         stdscr.addstr(1, 29, str(score.get_score), curses.color_pair(3))
+
         stdscr.addstr(1, 33, "Lives : ", curses.color_pair(3))
+
         stdscr.addstr(1, 40, str(pacman.lives), curses.color_pair(3))
 
         # affichage de la carte au début
@@ -200,6 +219,7 @@ def game_loop(stdscr, lives):
         # Si l'user decide, il peut quitter le jeu en appuyant sur P (attention pas de verification).
 
         if key == ord('z') or key == ord('q') or key == ord('s') or key == ord('d'):
+
             prev_pacman = pacman.pos.copy()
             key, map_ar, score, count_coll = pacman.moves(key, map_ar, score, count_coll)  # pacman moves
 
@@ -228,6 +248,7 @@ def game_loop(stdscr, lives):
             stdscr.erase()
             stdscr.refresh()
             game_loop(stdscr, pacman.lives)
+
 
         if key == ord('p'):
             break
@@ -349,6 +370,111 @@ def menu_exit(stdscr, menu_obj):
 
 
 def main(stdscr):
+    # Initialisation de la library curse:
+    init_win(stdscr)
+    menu_obj = Menu(5)
+    current_row = menu_obj.current_row
+    menu = menu_obj.menu_tab
+    menu_obj.print_menu(stdscr, current_row)
+
+    while True:
+        key = stdscr.getch()
+        if (key == curses.KEY_UP or key == ord('z')) and current_row > 5:
+            current_row -= 1
+        elif (key == curses.KEY_DOWN or key == ord('s')) and current_row < len(menu) - 1 + 5:
+            current_row += 1
+        elif key == curses.KEY_ENTER or key in [10, 13]:
+
+            if current_row == 5:
+                menu_gamemode(stdscr, menu_obj)
+            elif current_row == 6:
+                pass
+                # DISPLAY SCOREBOARD
+            elif current_row == 7:
+                pass
+                # DISPLAY SETTINGS
+            elif current_row == 8:
+                menu_exit(stdscr, menu_obj)
+        menu_obj.print_menu(stdscr, current_row)
+        stdscr.refresh()
+
+
+
+
+
+def menu_gamemode(stdscr, menu_obj):
+    """
+        auth: C. De Dryver
+        Cette fonction est utilisé pour creer un menu gamemode, et l'utilisateur peut choisir l'un des choix qui s'offre a lui
+        en naviguant d'une réponse a l'autre.
+
+        PRE: (curses) stdscr : Interface console sur laquelle on travaille
+             (Menu) menu_obj : Classe local qui nous permet de creer un menu
+
+        POST: Creer un choix entre le mode solo ou le mode duo. Solo / Duo
+    """
+    gamemode_current_row = 6
+    menu_obj.menu_gamemode(stdscr, gamemode_current_row)
+    while True:
+        key = stdscr.getch()
+        if (key == curses.KEY_LEFT or key == ord('q')) and gamemode_current_row == 7:
+            gamemode_current_row -= 1
+        elif (key == curses.KEY_RIGHT or key == ord('d')) and gamemode_current_row == 6:
+            gamemode_current_row += 1
+        elif key == curses.KEY_ENTER or key in [10, 13]:
+            if gamemode_current_row == 6:
+                stdscr.clear()
+                game_loop(stdscr, 1)
+            elif gamemode_current_row == 7:
+                stdscr.clear()
+                break
+        menu_obj.menu_gamemode(stdscr, gamemode_current_row)
+        stdscr.refresh()
+
+
+
+
+
+def menu_exit(stdscr, menu_obj):
+    """
+        auth: C. De Dryver
+        Cette fonction est utilisé pour creer un menu exit, et l'utilisateur peut choisir l'un des choix qui s'offre a lui
+        en naviguant d'une réponse a l'autre.
+
+        PRE: (curses) stdscr : Interface console sur laquelle on travaille
+             (Menu) menu_obj : Classe local qui nous permet de creer un menu
+
+        POST: Creer un choix pour quitter l'application. Yes / No
+    """
+    leave_current_row = 4
+    menu_obj.menu_leave(stdscr, leave_current_row)
+    while True:
+        key = stdscr.getch()
+        if (key == curses.KEY_UP or key == ord('z')) and leave_current_row == 5:
+            leave_current_row -= 1
+        elif (key == curses.KEY_DOWN or key == ord('s')) and leave_current_row == 4:
+            leave_current_row += 1
+        elif key == curses.KEY_ENTER or key in [10, 13]:
+            if leave_current_row == 4:
+                exit()
+            elif leave_current_row == 5:
+                stdscr.clear()
+                break
+        menu_obj.menu_leave(stdscr, leave_current_row)
+        stdscr.refresh()
+
+
+
+
+
+def main(stdscr):
+    """
+        auth: C. De Dryver
+        Ce main va creer un menu de base, ou l'on va choisir ce que l'on peut faire, Le scoreboard et les settings ne sont
+        pas encore implémentée.
+
+        PRE: (curses) stdscr: interface console sur laquelle on affiche tout.
+    """
     # Initialisation de la library curse:
     init_win(stdscr)
     menu_obj = Menu(5)
