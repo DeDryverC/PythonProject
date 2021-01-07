@@ -3,6 +3,8 @@
         id: menu_screen
     GameModeScreen:
     ExitScreen:
+    MapChoiceScreen
+
 
 
 <MenuScreen>:
@@ -33,26 +35,41 @@
         cols : 1
         rows : 2
         Label:
-            text: "Choisissez le mode de jeu"
+            text: "Choisissez le mode de jeu :"
         GridLayout:
-            cols : 5
+            cols : 3
             rows : 1
             Button:
                 text: 'Solo'
                 background_color: (0, 99, 71, 0.5)
-                on_press: print("coucou")
-            Label:
-                text :" "
+                on_press: root.manager.current = "_map_choice_screen_"
             Button:
                 text: 'Duo'
                 background_color: (0, 99, 71, 0.5)
-                on_press: print("coucou duo")
-            Label:
-                text :" "
+                on_press: root.manager.current = "_map_choice_screen_"
             Button:
                 text: 'Retour'
                 background_color: (0, 99, 71, 0.5)
                 on_press: root.manager.current = '_menu_screen_'
+
+<MapChoiceScreen>:
+    name: "_map_choice_screen_"
+    GridLayout:
+        rows: 2
+        cols: 1
+        Label:
+            text: "Choisissez une map"
+        GridLayout:
+            cols: 2
+            rows: 1
+            Button:
+                text: 'Map 1'
+                background_color: (0, 99, 71, 0.5)
+                on_press: pass
+            Button:
+                text: 'Map 2'
+                background_color: (0, 99, 71, 0.5)
+                on_press: pass
 
 <ExitScreen>:
     name: "_exit_screen_"

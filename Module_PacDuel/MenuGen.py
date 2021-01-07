@@ -62,6 +62,7 @@ class Menu:
 
         if isinstance(selected_row_idx, type(int)):
             raise TypeError('selected_row_idx must be an int')
+        #todo mettre dans les logs
 
         h, w = self.__print_logo(stdscr)
 

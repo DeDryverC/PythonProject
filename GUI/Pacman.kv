@@ -1,0 +1,18 @@
+<GameScreenManager>:
+    StartScreen:
+        id: start_screen
+    GameScreen:
+
+
+<StartScreen>:
+    name: '_start_screen_'
+    Button:
+            text: 'Start'
+            anchor_x: 'middle'
+            anchor_y: 'middle'
+            background_color: (0, 99, 71, 0.5)
+            on_press: root.manager.current = '_game_screen_'
+
+
+<GameScreen>:
+    name: '_game_screen_'

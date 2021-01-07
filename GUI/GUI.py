@@ -16,6 +16,17 @@ class GameModeScreen(Screen):
 class ExitScreen(Screen):
     pass
 
+class MapChoiceScreen(Screen):
+    def __init__(self, **kwargs):
+        super(MapChoiceScreen, self).__init__(**kwargs)
+    def map_1_launch(self):
+        pass
+
+    def map_2_launch(self):
+        pass
+
+
+
 class PacManScreenManager(ScreenManager):
     def __init__(self, **kwargs):
         super(PacManScreenManager, self).__init__(**kwargs)
