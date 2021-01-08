@@ -1,11 +1,6 @@
 """
 Auth: Cédric De Dryver, Andréas Bombaert,
-Last Date: 10/11/2020
-Update 10/11/2020 : -le mvp utilise maintenant des fichiers pour générer les cartes
-                    et se déplacer dessus
-                    -quelques optimisations et aération du code
-VERSION : INSTABLE
-Desc: MVP du projet 2TI en python.
+Last Date: 7/11/2021
 """
 
 # IMPORT SECTION
@@ -76,6 +71,10 @@ def game_won(stdscr, score):
 
 
 def life_lost(stdscr, lives, score):
+    """
+    Ecrit par Andreas Bombaert
+    Description: [version console] affiche un message quand le pacman meurt une fois
+    """
     stdscr.erase()
     msg = ""
     if lives > 1:
