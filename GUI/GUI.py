@@ -19,11 +19,10 @@ class ExitScreen(Screen):
 class MapChoiceScreen(Screen):
     def __init__(self, **kwargs):
         super(MapChoiceScreen, self).__init__(**kwargs)
-    def map_1_launch(self):
-        pass
+
 
     def map_2_launch(self):
-        pass
+        return 2
 
 
 
@@ -44,8 +43,12 @@ class MenuApp(App):
     def build(self):
         return PacManScreenManager()
 
+    def map_1_launch(self):
+        self.stop()
+        return 1
 
-if __name__ == '__main__':
+def launch_menu():
     Config.set('graphics', 'width', '600')
     Config.set('graphics', 'height', '400')
-    MenuApp().run()
+    oui = MenuApp().run()
+    return oui
