@@ -500,11 +500,9 @@ def main(choice):
     if choice == 'curses':
         curses.wrapper(main_curses)
     elif choice == "gui":
-        test = launch_menu()
-        if test == 1:
-            game_loop_gui(3)
-        else:
-            return
+        launch_menu()
+    elif choice == 'pacman':
+        game_loop_gui(3)
 
 if __name__ == "__main__":
-    main('gui')
+    main('pacman')

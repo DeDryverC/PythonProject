@@ -1,5 +1,6 @@
 from kivy import Config
 from kivy.app import App
+from kivy.properties import StringProperty
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.widget import Widget
 from kivy.uix.boxlayout import BoxLayout
@@ -22,7 +23,7 @@ class MapChoiceScreen(Screen):
 
 
     def map_2_launch(self):
-        return 2
+        ampm = StringProperty("")
 
 
 

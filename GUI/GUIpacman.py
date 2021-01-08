@@ -203,10 +203,10 @@ class GameApp(App):
             return True
 
 
-#if __name__ == "__main__":
-#   Config.set('graphics', 'width', '1420')
-#    Config.set('graphics', 'height', '800')
-#    GameApp("data/map.txt", 6, 11).run()
+if __name__ == "__main__":
+    Config.set('graphics', 'width', '1420')
+    Config.set('graphics', 'height', '800')
+    GameApp("data/map.txt", 16, 11).run()
 
 def GameInit(file, pos_x, pos_y, pacman):
     GameApp(file, pos_x, pos_y, pacman).run()
