@@ -18,6 +18,15 @@ from kivy.uix.widget import Widget
 from PythonProject.Module_PacDuel.MovingEntities import Ghost
 
 
+"""
+
+Auth: Cédric De Dryver
+
+This class is used to create a pacman game with a GUI,
+but it's not working because kivy's version is incompatible with other librairies and the python version.
+"""
+
+
 class GameApp(App):
     def __init__(self, file, pos_x, pos_y, pacman, **kwargs):
         super(GameApp, self).__init__(**kwargs)

@@ -378,19 +378,12 @@ def main_curses(stdscr):
         menu_obj.print_menu(stdscr, current_row)
         stdscr.refresh()
 
-def init_game_gui(lives):
-    pass
-
-
-
-
 
 def game_loop_gui(lives):
-    """ Main function
-    Auth: Cédric De Dryver, November 09 2020 - 17h27
-    Modified by Andréas Bombaert, November 10 2020 - 17h
-    All lines have a step-by-step description in French.
-    But this main function allows you to play the simplified pac man game.
+    """ Game loop gui
+    Auth: Cédric De Dryver, Jan 02 18h03
+    This Game loop is used to create the game with a GUI
+    Not working, kivy is too outdated and incompatible with other libraries
     the keys are Z: up, S: down, Q: left, D: right.
     It's better with an AZERTY keyboard.
     """
@@ -496,6 +489,12 @@ def game_loop_gui(lives):
     return score.get_score
 
 def main(choice):
+    """
+    little main, to choose what interface we want
+
+    :param choice: str :  work with these str : "curses", "gui", "pacman"
+    :return: launch one interface.
+    """
     if choice == 'curses':
         curses.wrapper(main_curses)
     elif choice == "gui":

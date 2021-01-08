@@ -7,6 +7,13 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.label import Label
 
+"""
+Auth: Cédric De Dryver.
+
+This class is used to create a GUI menu to choose what gamemode, map etc we want to play
+Not working at the moment cause kivy's version is incompatible with other librairies and the version of python.
+
+"""
 
 class MenuScreen(Screen):
     pass
